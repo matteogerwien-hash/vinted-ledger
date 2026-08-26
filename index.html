@@ -546,10 +546,10 @@ async function loadGoal(){
     goal = res && res.value ? JSON.parse(res.value) : { monthly: 0 };
   }catch(e){ goal = { monthly: 0 }; }
 }
-async function saveGoal(){
+async function saveGoal(silent){
   try{
     await withRetry(() => window.storage.set(GOAL_KEY, JSON.stringify(goal), false));
-    showToast('Ziel gespeichert ✓', 'ok');
+    if(!silent) showToast('Ziel gespeichert ✓', 'ok');
     return true;
   }catch(e){
     showToast('Ziel speichern fehlgeschlagen', 'err');
@@ -1391,7 +1391,7 @@ $('importFileInput').addEventListener('change', async (ev) => {
     entries = data.entries.map(normalize);
     if(data.goal) goal = data.goal;
     const okE = await saveEntries(true);
-    const okG = await saveGoal();
+    const okG = await saveGoal(true);
     if(okE){
       showToast('Backup importiert ✓', 'ok');
       renderBestand(); renderList(); renderStats();
@@ -1419,6 +1419,8 @@ $('importFileInput').addEventListener('change', async (ev) => {
       if($('view-stats').classList.contains('active')){
         renderCumulativeChart();
         renderMonthlyBarChart();
+        renderSalesCountChart();
+        renderWeekdayChart();
       }
     }, 120);
   };
