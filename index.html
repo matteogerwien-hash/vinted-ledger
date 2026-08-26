@@ -342,6 +342,7 @@
       <div class="line-item"><span>Marge</span><span class="val" id="statMargin">0 %</span></div>
       <div class="line-item"><span>Gebundenes Kapital im Bestand</span><span class="val" id="statBestandCapital">0,00 €</span></div>
       <div class="line-item"><span>Ø Haltezeit bis Verkauf</span><span class="val" id="statHoldTime">0 Tage</span></div>
+      <div class="line-item"><span>Bester Monat</span><span class="val pos" id="statBestMonth">–</span></div>
     </div>
 
     <div class="goal-card">
@@ -502,14 +503,28 @@ document.querySelectorAll('nav.tabs button').forEach(btn => {
 // --- Install tip ---
 $('dismissTip').addEventListener('click', async () => {
   $('installTip').style.display = 'none';
-  try{ await window.storage.set(TIP_KEY, '1', false); }catch(e){}
+  try{ await storage.set(TIP_KEY, '1'); }catch(e){}
 });
 async function checkTip(){
   try{
-    const res = await window.storage.get(TIP_KEY, false);
+    const res = await storage.get(TIP_KEY);
     if(res && res.value === '1') $('installTip').style.display = 'none';
   }catch(e){}
 }
+
+// --- Storage: localStorage-backed (this app runs as a standalone site, not inside a Claude artifact) ---
+const storage = {
+  async get(key){
+    try{
+      const v = localStorage.getItem(key);
+      return v !== null ? { key, value: v } : null;
+    }catch(e){ throw e; }
+  },
+  async set(key, value){
+    localStorage.setItem(key, value);
+    return { key, value };
+  }
+};
 
 // --- Storage with retry (fixes false "Speichern fehlgeschlagen" alerts) ---
 function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
@@ -524,14 +539,14 @@ async function withRetry(fn, attempts=3, baseDelay=350){
 
 async function loadEntries(){
   try{
-    const res = await withRetry(() => window.storage.get(STORE_KEY, false));
+    const res = await withRetry(() => storage.get(STORE_KEY));
     const raw = res && res.value ? JSON.parse(res.value) : [];
     entries = raw.map(normalize);
   }catch(e){ entries = []; }
 }
 async function saveEntries(silent){
   try{
-    await withRetry(() => window.storage.set(STORE_KEY, JSON.stringify(entries), false));
+    await withRetry(() => storage.set(STORE_KEY, JSON.stringify(entries)));
     if(!silent) showToast('Gespeichert ✓', 'ok');
     return true;
   }catch(e){
@@ -542,13 +557,13 @@ async function saveEntries(silent){
 }
 async function loadGoal(){
   try{
-    const res = await withRetry(() => window.storage.get(GOAL_KEY, false));
+    const res = await withRetry(() => storage.get(GOAL_KEY));
     goal = res && res.value ? JSON.parse(res.value) : { monthly: 0 };
   }catch(e){ goal = { monthly: 0 }; }
 }
 async function saveGoal(silent){
   try{
-    await withRetry(() => window.storage.set(GOAL_KEY, JSON.stringify(goal), false));
+    await withRetry(() => storage.set(GOAL_KEY, JSON.stringify(goal)));
     if(!silent) showToast('Ziel gespeichert ✓', 'ok');
     return true;
   }catch(e){
@@ -871,6 +886,22 @@ function renderStats(){
     .map(e => Math.max(0, Math.round((new Date(e.soldDate) - new Date(e.purchaseDate)) / 86400000)));
   const avgHold = holdDays.length ? Math.round(holdDays.reduce((a,b)=>a+b,0) / holdDays.length) : 0;
   $('statHoldTime').textContent = holdDays.length ? avgHold + (avgHold === 1 ? ' Tag' : ' Tage') : '–';
+
+  const monthProfits = {};
+  sold.forEach(e => {
+    const m = (e.soldDate || '').slice(0,7);
+    if(!m) return;
+    monthProfits[m] = (monthProfits[m] || 0) + e.profit;
+  });
+  const monthKeys = Object.keys(monthProfits);
+  if(monthKeys.length){
+    const bestMonth = monthKeys.reduce((a,b) => monthProfits[a] >= monthProfits[b] ? a : b);
+    const [by, bm] = bestMonth.split('-');
+    const monthNames = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+    $('statBestMonth').textContent = `${monthNames[parseInt(bm,10)-1]} ${by} · ${eur(monthProfits[bestMonth])}`;
+  }else{
+    $('statBestMonth').textContent = '–';
+  }
 
   renderGoal();
   renderCumulativeChart();
