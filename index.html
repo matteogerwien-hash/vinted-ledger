@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mein Vinted-Ledger</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F5EFE4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5EFE4;
+    --paper-2:#EDE5D4;
+    --ink:#241F1C;
+    --ink-soft:#5B5248;
+    --rose:#A8415C;
+    --rose-light:#C97A8F;
+    --green:#4B6350;
+    --green-light:#7C9482;
+    --gold:#B98B34;
+    --gold-light:#D9B871;
+    --line:#DAD2C4;
+    --red:#A8415C;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 1px 1px, rgba(36,31,28,0.06) 1px, transparent 0) 0 0/16px 16px,
+      var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    padding:0 0 60px;
+  }
+  .wrap{max-width:540px;margin:0 auto;padding:0 18px;}
+
+  header{padding:32px 0 6px;text-align:center;position:relative;}
+  .tag-hole{width:14px;height:14px;border:2px solid var(--ink);border-radius:50%;margin:0 auto 10px;background:var(--paper);}
+  h1{font-family:'Fraunces',serif;font-optical-sizing:auto;font-weight:600;font-size:1.9rem;margin:0;letter-spacing:-0.01em;}
+  header p{font-size:0.8rem;color:var(--ink-soft);margin:6px 0 0;text-transform:uppercase;letter-spacing:0.12em;}
+
+  .install-tip{
+    font-size:0.74rem;color:var(--ink-soft);text-align:center;
+    background:var(--paper-2);border:1px dashed var(--line);border-radius:8px;
+    padding:8px 10px;margin:14px 0 0;display:flex;justify-content:space-between;align-items:center;gap:8px;
+  }
+  .install-tip button{background:none;border:none;color:var(--ink-soft);font-size:0.9rem;cursor:pointer;line-height:1;padding:2px;}
+
+  nav.tabs{display:flex;gap:8px;margin:20px 0 20px;}
+  nav.tabs button{
+    flex:1;font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;
+    padding:11px 4px;background:var(--paper-2);border:1.5px solid var(--ink);
+    border-radius:6px 6px 2px 2px;color:var(--ink-soft);cursor:pointer;transition:all .15s ease;
+  }
+  nav.tabs button.active{background:var(--ink);color:var(--paper);}
+  nav.tabs button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+
+  .view{display:none;}
+  .view.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+  .card{background:var(--paper-2);border:1.5px solid var(--ink);border-radius:10px;padding:20px;margin-bottom:16px;}
+  label{display:block;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-soft);margin:14px 0 6px;}
+  label:first-of-type{margin-top:0;}
+  input,select{
+    width:100%;font-family:'JetBrains Mono',monospace;font-size:1rem;padding:10px 12px;
+    border:1.5px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);
+  }
+  input[type="text"],select{font-family:'Inter',sans-serif;}
+  input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+  .btn{width:100%;margin-top:20px;padding:13px;background:var(--rose);color:var(--paper);border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;letter-spacing:0.02em;}
+  .btn:active{transform:translateY(1px);}
+  .btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  .btn.ghost{background:transparent;color:var(--ink-soft);border:1.5px solid var(--line);margin-top:10px;}
+  .btn.small{width:auto;padding:8px 14px;font-size:0.8rem;margin-top:0;}
+
+  .editing-banner{
+    display:flex;justify-content:space-between;align-items:center;
+    background:var(--gold-light);border:1.5px solid var(--ink);border-radius:8px;
+    padding:10px 14px;margin-bottom:14px;font-size:0.82rem;font-weight:600;
+  }
+  .editing-banner button{background:none;border:none;text-decoration:underline;font-size:0.78rem;cursor:pointer;color:var(--ink);}
+
+  .hint{font-size:0.78rem;color:var(--ink-soft);margin-top:8px;}
+
+  /* filter / sort bar */
+  .toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
+  .toolbar select{width:auto;flex:1;min-width:130px;padding:8px 10px;font-size:0.82rem;}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+  .chip{
+    font-size:0.72rem;padding:6px 12px;border-radius:20px;border:1.5px solid var(--line);
+    background:var(--paper-2);color:var(--ink-soft);cursor:pointer;font-weight:600;
+  }
+  .chip.active{background:var(--ink);border-color:var(--ink);color:var(--paper);}
+
+  .entry{position:relative;padding:14px 4px;border-bottom:1.5px dashed var(--line);display:grid;grid-template-columns:1fr auto;gap:2px;cursor:pointer;}
+  .entry:last-child{border-bottom:none;}
+  .entry .name{font-weight:600;font-size:0.95rem;}
+  .entry .cat{
+    display:inline-block;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;
+    padding:2px 7px;border-radius:10px;margin-left:6px;color:var(--paper);vertical-align:middle;
+  }
+  .entry .date{font-size:0.72rem;color:var(--ink-soft);grid-column:1;}
+  .entry .profit{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1rem;text-align:right;}
+  .entry .profit.pos{color:var(--green);}
+  .entry .profit.neg{color:var(--red);}
+  .entry .breakdown{grid-column:1/-1;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--ink-soft);margin-top:4px;}
+  .entry .actions{grid-column:1/-1;justify-self:end;display:flex;gap:12px;margin-top:4px;}
+  .entry .actions button{font-size:0.72rem;color:var(--ink-soft);background:none;border:none;text-decoration:underline;cursor:pointer;padding:2px 0;}
+
+  .empty{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:0.88rem;}
+
+  /* Receipt */
+  .receipt{background:var(--paper);border:1.5px solid var(--ink);border-radius:2px;padding:24px 20px 30px;position:relative;box-shadow:0 6px 0 -2px var(--paper-2), 0 6px 1px -1px var(--ink);margin-bottom:26px;}
+  .receipt::after{content:"";position:absolute;left:0;right:0;bottom:-9px;height:14px;
+    background:linear-gradient(-45deg, var(--paper) 8px, transparent 0),linear-gradient(45deg, var(--paper) 8px, transparent 0);
+    background-size:16px 16px;background-position:0 0;}
+  .receipt h2{font-family:'Fraunces',serif;font-size:1.25rem;text-align:center;margin:0 0 4px;}
+  .receipt .sub{text-align:center;font-size:0.72rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:18px;}
+  .line-item{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:0.88rem;padding:6px 0;border-bottom:1px dotted var(--line);}
+  .line-item.total{border-bottom:none;border-top:1.5px solid var(--ink);margin-top:6px;padding-top:12px;font-weight:700;font-size:1.05rem;}
+  .line-item .val.pos{color:var(--green);}
+  .line-item .val.neg{color:var(--red);}
+
+  .panel{margin-bottom:22px;}
+  .panel h3{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-soft);margin:0 0 12px;font-weight:700;}
+  .chart-box{background:var(--paper-2);border:1.5px solid var(--line);border-radius:10px;padding:16px;}
+
+  .legend-inline{display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:0.72rem;color:var(--ink-soft);}
+  .legend-inline span{display:flex;align-items:center;gap:5px;}
+
+  .donut-wrap{display:flex;align-items:center;gap:18px;}
+  .legend{flex:1;display:flex;flex-direction:column;gap:8px;}
+  .legend-row{display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;}
+  .legend-row .lbl{display:flex;align-items:center;gap:7px;}
+  .swatch{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+
+  .barlist h3{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-soft);margin:0 0 10px;font-weight:700;}
+  .bar-row{margin-bottom:10px;}
+  .bar-row .label{display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:3px;}
+  .bar-track{height:8px;background:var(--paper-2);border-radius:4px;overflow:hidden;}
+  .bar-fill{height:100%;background:var(--gold);border-radius:4px;}
+
+  .export-btn{
+    display:block;width:100%;text-align:center;padding:12px;margin-top:4px;
+    background:transparent;border:1.5px solid var(--ink);border-radius:8px;
+    font-weight:600;font-size:0.85rem;cursor:pointer;color:var(--ink);
+  }
+
+  @media (prefers-reduced-motion: reduce){ .view.active{animation:none;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="tag-hole"></div>
+    <h1>Mein Vinted-Ledger</h1>
+    <p>Einkauf · Verkauf · Gewinn</p>
+    <div class="install-tip" id="installTip">
+      <span>Tipp: Über „Zum Home-Bildschirm hinzufügen" im Browser-Menü läuft's wie eine echte App.</span>
+      <button id="dismissTip" aria-label="Tipp schließen">✕</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="active" data-view="add">Neuer Eintrag</button>
+    <button data-view="list">Verkäufe</button>
+    <button data-view="stats">Statistik</button>
+  </nav>
+
+  <!-- ADD / EDIT -->
+  <section class="view active" id="view-add">
+    <div class="editing-banner" id="editingBanner" style="display:none;">
+      <span>Eintrag wird bearbeitet</span>
+      <button id="cancelEdit">Abbrechen</button>
+    </div>
+    <div class="card">
+      <label for="itemName">Artikel</label>
+      <input type="text" id="itemName" placeholder="z. B. Levi's 501 Jeans">
+
+      <label for="category">Kategorie</label>
+      <select id="category">
+        <option value="Jeans">Jeans</option>
+        <option value="Jacken">Jacken</option>
+        <option value="Shirts/Tops">Shirts / Tops</option>
+        <option value="Schuhe">Schuhe</option>
+        <option value="Accessoires">Accessoires</option>
+        <option value="Sonstiges">Sonstiges</option>
+      </select>
+
+      <div class="row2">
+        <div>
+          <label for="purchasePrice">Einkaufspreis (€)</label>
+          <input type="number" step="0.01" id="purchasePrice" placeholder="0,00">
+        </div>
+        <div>
+          <label for="salePrice">Verkaufspreis (€)</label>
+          <input type="number" step="0.01" id="salePrice" placeholder="0,00">
+        </div>
+      </div>
+
+      <label for="soldDate">Verkaufsdatum</label>
+      <input type="date" id="soldDate">
+
+      <p class="hint">Gewinn = Verkaufspreis − Einkaufspreis</p>
+
+      <button class="btn" id="saveBtn">Eintrag speichern</button>
+    </div>
+  </section>
+
+  <!-- LIST -->
+  <section class="view" id="view-list">
+    <div class="toolbar">
+      <select id="sortSelect">
+        <option value="newest">Neueste zuerst</option>
+        <option value="oldest">Älteste zuerst</option>
+        <option value="profitDesc">Größter Gewinn</option>
+        <option value="profitAsc">Kleinster Gewinn</option>
+      </select>
+    </div>
+    <div class="chips" id="categoryChips"></div>
+    <div class="card" id="listCard">
+      <div class="empty" id="listEmpty">Noch keine Verkäufe eingetragen.<br>Leg unter „Neuer Eintrag" los.</div>
+      <div id="listEntries"></div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="view" id="view-stats">
+    <div class="receipt">
+      <h2>Kassenbeleg</h2>
+      <div class="sub" id="statsCount">0 verkaufte Artikel</div>
+      <div class="line-item"><span>Verkaufssumme</span><span class="val" id="statRevenue">0,00 €</span></div>
+      <div class="line-item"><span>Einkaufskosten</span><span class="val neg" id="statCost">0,00 €</span></div>
+      <div class="line-item total"><span>Gewinn</span><span class="val" id="statProfit">0,00 €</span></div>
+      <div class="line-item"><span>Ø Gewinn / Artikel</span><span class="val" id="statAvg">0,00 €</span></div>
+      <div class="line-item"><span>Marge</span><span class="val" id="statMargin">0 %</span></div>
+    </div>
+
+    <div class="panel" id="cumulativePanel" style="display:none;">
+      <h3>Kumulierter Gewinn</h3>
+      <div class="chart-box">
+        <canvas id="cumulativeChart" height="130"></canvas>
+      </div>
+    </div>
+
+    <div class="panel" id="monthlyBarPanel" style="display:none;">
+      <h3>Umsatz vs. Einkauf pro Monat</h3>
+      <div class="chart-box">
+        <canvas id="monthlyBarChart" height="150"></canvas>
+        <div class="legend-inline">
+          <span><span class="swatch" style="background:#4B6350"></span> Verkauf</span>
+          <span><span class="swatch" style="background:#A8415C"></span> Einkauf</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="donutPanel" style="display:none;">
+      <h3>Verkäufe nach Kategorie</h3>
+      <div class="chart-box donut-wrap">
+        <canvas id="donutChart" width="120" height="120"></canvas>
+        <div class="legend" id="donutLegend"></div>
+      </div>
+    </div>
+
+    <div class="panel barlist" id="catAvgPanel" style="display:none;">
+      <h3>Ø Gewinn je Kategorie</h3>
+      <div id="catAvgBars"></div>
+    </div>
+
+    <div class="panel barlist" id="topList" style="display:none;">
+      <h3>Top-Verkäufe nach Gewinn</h3>
+      <div id="topBars"></div>
+    </div>
+
+    <button class="export-btn" id="exportBtn">Als CSV exportieren</button>
+  </section>
+
+</div>
+
+<script>
+const STORE_KEY = 'vinted-entries';
+const TIP_KEY = 'vinted-hide-install-tip';
+let entries = [];
+let editingId = null;
+let activeCategory = 'Alle';
+
+const CAT_COLORS = {
+  'Jeans':'#A8415C','Jacken':'#B98B34','Shirts/Tops':'#4B6350',
+  'Schuhe':'#C97A8F','Accessoires':'#7C9482','Sonstiges':'#5B5248'
+};
+
+const $ = (id) => document.getElementById(id);
+const eur = (n) => n.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+
+// --- Tabs ---
+document.querySelectorAll('nav.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    btn.classList.add('active');
+    $('view-' + btn.dataset.view).classList.add('active');
+    if (btn.dataset.view === 'list') renderList();
+    if (btn.dataset.view === 'stats') renderStats();
+  });
+});
+
+// --- Install tip ---
+$('dismissTip').addEventListener('click', async () => {
+  $('installTip').style.display = 'none';
+  try{ await window.storage.set(TIP_KEY, '1', false); }catch(e){}
+});
+async function checkTip(){
+  try{
+    const res = await window.storage.get(TIP_KEY, false);
+    if(res && res.value === '1') $('installTip').style.display = 'none';
+  }catch(e){}
+}
+
+// --- Storage ---
+async function loadEntries(){
+  try{
+    const res = await window.storage.get(STORE_KEY, false);
+    entries = res && res.value ? JSON.parse(res.value) : [];
+  }catch(e){
+    entries = [];
+  }
+}
+async function saveEntries(){
+  try{
+    await window.storage.set(STORE_KEY, JSON.stringify(entries), false);
+  }catch(e){
+    console.error('Speichern fehlgeschlagen', e);
+    alert('Speichern hat nicht geklappt. Bitte nochmal versuchen.');
+  }
+}
+
+// --- Add / Edit entry ---
+function resetForm(){
+  $('itemName').value = '';
+  $('category').value = 'Jeans';
+  $('purchasePrice').value = '';
+  $('salePrice').value = '';
+  $('soldDate').value = '';
+  editingId = null;
+  $('editingBanner').style.display = 'none';
+  $('saveBtn').textContent = 'Eintrag speichern';
+}
+
+$('cancelEdit').addEventListener('click', resetForm);
+
+$('saveBtn').addEventListener('click', async () => {
+  const name = $('itemName').value.trim();
+  const category = $('category').value;
+  const purchase = parseFloat($('purchasePrice').value);
+  const sale = parseFloat($('salePrice').value);
+  const date = $('soldDate').value || new Date().toISOString().slice(0,10);
+
+  if(!name){ $('itemName').focus(); return; }
+  if(isNaN(purchase) || isNaN(sale)){ alert('Bitte Einkaufs- und Verkaufspreis eintragen.'); return; }
+
+  const profit = sale - purchase;
+
+  if(editingId){
+    const idx = entries.findIndex(e => e.id === editingId);
+    if(idx > -1){
+      entries[idx] = { ...entries[idx], name, category, purchase, sale, date, profit };
+    }
+  }else{
+    entries.unshift({ id: Date.now().toString(36), name, category, purchase, sale, date, profit });
+  }
+
+  $('saveBtn').disabled = true;
+  await saveEntries();
+  $('saveBtn').disabled = false;
+  resetForm();
+});
+
+// --- List view ---
+function categoriesInUse(){
+  const set = new Set(entries.map(e => e.category || 'Sonstiges'));
+  return Array.from(set);
+}
+
+function renderChips(){
+  const cats = ['Alle', ...categoriesInUse()];
+  $('categoryChips').innerHTML = cats.map(c =>
+    `<button class="chip ${c===activeCategory?'active':''}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>`
+  ).join('');
+  $('categoryChips').querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      activeCategory = chip.dataset.cat;
+      renderList();
+    });
+  });
+}
+
+function getSortedFiltered(){
+  let list = [...entries];
+  if(activeCategory !== 'Alle') list = list.filter(e => (e.category||'Sonstiges') === activeCategory);
+  const sort = $('sortSelect').value;
+  if(sort === 'newest') list.sort((a,b)=> b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+  if(sort === 'oldest') list.sort((a,b)=> a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
+  if(sort === 'profitDesc') list.sort((a,b)=> b.profit - a.profit);
+  if(sort === 'profitAsc') list.sort((a,b)=> a.profit - b.profit);
+  return list;
+}
+
+$('sortSelect').addEventListener('change', renderList);
+
+function renderList(){
+  renderChips();
+  const box = $('listEntries');
+  const empty = $('listEmpty');
+  const list = getSortedFiltered();
+
+  if(entries.length === 0){
+    empty.textContent = 'Noch keine Verkäufe eingetragen. Leg unter „Neuer Eintrag" los.';
+    empty.style.display = 'block';
+    box.innerHTML = '';
+    return;
+  }
+  if(list.length === 0){
+    empty.textContent = 'Keine Einträge in dieser Kategorie.';
+    empty.style.display = 'block';
+    box.innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  box.innerHTML = list.map(e => {
+    const cls = e.profit >= 0 ? 'pos' : 'neg';
+    const sign = e.profit >= 0 ? '+' : '';
+    const cat = e.category || 'Sonstiges';
+    const color = CAT_COLORS[cat] || '#5B5248';
+    return `
+      <div class="entry" data-id="${e.id}">
+        <div class="name">${escapeHtml(e.name)}<span class="cat" style="background:${color}">${escapeHtml(cat)}</span></div>
+        <div class="profit ${cls}">${sign}${eur(e.profit)}</div>
+        <div class="date">${formatDate(e.date)}</div>
+        <div class="breakdown">Einkauf ${eur(e.purchase)} · Verkauf ${eur(e.sale)}</div>
+        <div class="actions">
+          <button class="edit-btn" data-id="${e.id}">Bearbeiten</button>
+          <button class="del-btn" data-id="${e.id}">Löschen</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  box.querySelectorAll('.del-btn').forEach(btn => {
+    btn.addEventListener('click', async (ev) => {
+      ev.stopPropagation();
+      entries = entries.filter(e => e.id !== btn.dataset.id);
+      await saveEntries();
+      renderList();
+    });
+  });
+  box.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      startEdit(btn.dataset.id);
+    });
+  });
+}
+
+function startEdit(id){
+  const e = entries.find(x => x.id === id);
+  if(!e) return;
+  editingId = id;
+  $('itemName').value = e.name;
+  $('category').value = e.category || 'Jeans';
+  $('purchasePrice').value = e.purchase;
+  $('salePrice').value = e.sale;
+  $('soldDate').value = e.date;
+  $('editingBanner').style.display = 'flex';
+  $('saveBtn').textContent = 'Änderungen speichern';
+
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelector('nav.tabs button[data-view="add"]').classList.add('active');
+  $('view-add').classList.add('active');
+  $('itemName').focus();
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+function formatDate(iso){
+  const d = new Date(iso + 'T00:00:00');
+  if(isNaN(d)) return iso;
+  return d.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit', year:'numeric'});
+}
+
+// --- Stats view ---
+function renderStats(){
+  const count = entries.length;
+  const revenue = entries.reduce((s,e)=>s+e.sale,0);
+  const cost = entries.reduce((s,e)=>s+e.purchase,0);
+  const profit = revenue - cost;
+  const avg = count ? profit / count : 0;
+  const margin = revenue ? (profit / revenue * 100) : 0;
+
+  $('statsCount').textContent = count + (count === 1 ? ' verkaufter Artikel' : ' verkaufte Artikel');
+  $('statRevenue').textContent = eur(revenue);
+  $('statCost').textContent = '−' + eur(cost);
+  const profitEl = $('statProfit');
+  profitEl.textContent = (profit>=0?'':'−') + eur(Math.abs(profit));
+  profitEl.className = 'val ' + (profit >= 0 ? 'pos' : 'neg');
+  $('statAvg').textContent = (avg>=0?'':'−') + eur(Math.abs(avg));
+  $('statMargin').textContent = margin.toFixed(1).replace('.', ',') + ' %';
+
+  renderCumulativeChart();
+  renderMonthlyBarChart();
+  renderDonutChart();
+  renderCategoryAvgBars();
+  renderTopBars();
+}
+
+function renderTopBars(){
+  const top = [...entries].sort((a,b)=>b.profit-a.profit).slice(0,5).filter(e=>e.profit>0);
+  const panel = $('topList');
+  if(top.length === 0){ panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  const max = Math.max(...top.map(e=>e.profit), 0.01);
+  $('topBars').innerHTML = top.map(e => `
+    <div class="bar-row">
+      <div class="label"><span>${escapeHtml(e.name)}</span><span>${eur(e.profit)}</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.max((e.profit/max*100),4)}%"></div></div>
+    </div>
+  `).join('');
+}
+
+function renderCumulativeChart(){
+  const panel = $('cumulativePanel');
+  if(entries.length === 0){ panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+
+  const sorted = [...entries].sort((a,b)=> a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
+  let running = 0;
+  const pts0 = sorted.map(e => { running += e.profit; return { date:e.date, v:running }; });
+
+  const canvas = $('cumulativeChart');
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.clientWidth || 300;
+  const cssH = 130;
+  canvas.width = cssW * dpr;
+  canvas.height = cssH * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0,0,cssW,cssH);
+
+  const values = pts0.map(p => p.v);
+  const maxV = Math.max(...values, 0);
+  const minV = Math.min(...values, 0);
+  const range = (maxV - minV) || 1;
+  const padL = 8, padR = 8, padT = 10, padB = 22;
+  const plotW = cssW - padL - padR;
+  const plotH = cssH - padT - padB;
+  const zeroY = padT + plotH - ((0 - minV) / range) * plotH;
+
+  ctx.strokeStyle = '#DAD2C4';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padL, zeroY);
+  ctx.lineTo(cssW - padR, zeroY);
+  ctx.stroke();
+
+  const stepX = pts0.length > 1 ? plotW / (pts0.length - 1) : 0;
+  const pts = pts0.map((p,i) => {
+    const x = padL + (pts0.length > 1 ? stepX * i : plotW/2);
+    const y = padT + plotH - ((p.v - minV) / range) * plotH;
+    return {x,y,v:p.v,date:p.date};
+  });
+
+  if(pts.length > 1){
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, zeroY);
+    pts.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.lineTo(pts[pts.length-1].x, zeroY);
+    ctx.closePath();
+    const grad = ctx.createLinearGradient(0,padT,0,padT+plotH);
+    const endColor = values[values.length-1] >= 0 ? '75,99,80' : '168,65,92';
+    grad.addColorStop(0, `rgba(${endColor},0.30)`);
+    grad.addColorStop(1, `rgba(${endColor},0.03)`);
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
+
+  ctx.beginPath();
+  pts.forEach((p,i) => i===0 ? ctx.moveTo(p.x,p.y) : ctx.lineTo(p.x,p.y));
+  ctx.strokeStyle = '#241F1C';
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  ctx.font = '10px Inter, sans-serif';
+  ctx.fillStyle = '#5B5248';
+  ctx.textAlign = 'left';
+  if(pts.length){
+    ctx.fillText(formatDate(pts[0].date), pts[0].x, cssH - 6);
+    ctx.textAlign = 'right';
+    ctx.fillText(formatDate(pts[pts.length-1].date), pts[pts.length-1].x, cssH - 6);
+  }
+  const last = pts[pts.length-1];
+  if(last){
+    ctx.beginPath();
+    ctx.arc(last.x, last.y, 3.5, 0, Math.PI*2);
+    ctx.fillStyle = last.v >= 0 ? '#4B6350' : '#A8415C';
+    ctx.fill();
+  }
+}
+
+function renderMonthlyBarChart(){
+  const panel = $('monthlyBarPanel');
+  if(entries.length === 0){ panel.style.display = 'none'; return; }
+
+  const byMonth = {};
+  entries.forEach(e => {
+    const m = (e.date || '').slice(0,7);
+    if(!m) return;
+    if(!byMonth[m]) byMonth[m] = {sale:0, purchase:0};
+    byMonth[m].sale += e.sale;
+    byMonth[m].purchase += e.purchase;
+  });
+  const months = Object.keys(byMonth).sort();
+  if(months.length === 0){ panel.style.display = 'none'; return; }
+  const shown = months.slice(-6);
+  panel.style.display = 'block';
+
+  const canvas = $('monthlyBarChart');
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.clientWidth || 300;
+  const cssH = 150;
+  canvas.width = cssW * dpr;
+  canvas.height = cssH * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0,0,cssW,cssH);
+
+  const maxV = Math.max(...shown.map(m => Math.max(byMonth[m].sale, byMonth[m].purchase)), 0.01);
+  const padL = 6, padR = 6, padT = 10, padB = 24;
+  const plotW = cssW - padL - padR;
+  const plotH = cssH - padT - padB;
+  const groupW = plotW / shown.length;
+  const barW = Math.min(groupW * 0.32, 22);
+
+  ctx.strokeStyle = '#DAD2C4';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT + plotH);
+  ctx.lineTo(cssW - padR, padT + plotH);
+  ctx.stroke();
+
+  ctx.font = '10px Inter, sans-serif';
+  ctx.textAlign = 'center';
+
+  shown.forEach((m,i) => {
+    const cx = padL + groupW * i + groupW/2;
+    const saleH = (byMonth[m].sale / maxV) * plotH;
+    const purchaseH = (byMonth[m].purchase / maxV) * plotH;
+
+    ctx.fillStyle = '#4B6350';
+    ctx.fillRect(cx - barW - 2, padT + plotH - saleH, barW, saleH);
+
+    ctx.fillStyle = '#A8415C';
+    ctx.fillRect(cx + 2, padT + plotH - purchaseH, barW, purchaseH);
+
+    ctx.fillStyle = '#5B5248';
+    const [y,mo] = m.split('-');
+    ctx.fillText(mo + '/' + y.slice(2), cx, cssH - 8);
+  });
+}
+
+function renderCategoryAvgBars(){
+  const panel = $('catAvgPanel');
+  const byCat = {};
+  entries.forEach(e => {
+    const c = e.category || 'Sonstiges';
+    if(!byCat[c]) byCat[c] = {sum:0, count:0};
+    byCat[c].sum += e.profit;
+    byCat[c].count += 1;
+  });
+  const cats = Object.keys(byCat);
+  if(cats.length === 0){ panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+
+  const avgs = cats.map(c => ({ cat:c, avg: byCat[c].sum / byCat[c].count }));
+  avgs.sort((a,b) => b.avg - a.avg);
+  const max = Math.max(...avgs.map(a => Math.abs(a.avg)), 0.01);
+
+  $('catAvgBars').innerHTML = avgs.map(a => {
+    const cls = a.avg >= 0 ? 'pos' : 'neg';
+    const color = CAT_COLORS[a.cat] || '#5B5248';
+    return `
+      <div class="bar-row">
+        <div class="label"><span>${escapeHtml(a.cat)}</span><span class="${cls}">${eur(a.avg)}</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.max(Math.abs(a.avg)/max*100,4)}%;background:${color}"></div></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderDonutChart(){
+  const panel = $('donutPanel');
+  if(entries.length === 0){ panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+
+  const byCat = {};
+  entries.forEach(e => {
+    const c = e.category || 'Sonstiges';
+    byCat[c] = (byCat[c] || 0) + e.sale;
+  });
+  const cats = Object.keys(byCat);
+  const total = cats.reduce((s,c)=>s+byCat[c],0) || 1;
+
+  const canvas = $('donutChart');
+  const dpr = window.devicePixelRatio || 1;
+  const size = 120;
+  canvas.width = size*dpr; canvas.height = size*dpr;
+  canvas.style.width = size+'px'; canvas.style.height = size+'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,size,size);
+
+  const cx = size/2, cy = size/2, rOuter = size/2 - 4, rInner = rOuter*0.58;
+  let start = -Math.PI/2;
+  cats.forEach(c => {
+    const frac = byCat[c] / total;
+    const end = start + frac * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,rOuter,start,end);
+    ctx.closePath();
+    ctx.fillStyle = CAT_COLORS[c] || '#5B5248';
+    ctx.fill();
+    start = end;
+  });
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  ctx.arc(cx,cy,rInner,0,Math.PI*2);
+  ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+
+  $('donutLegend').innerHTML = cats
+    .sort((a,b)=>byCat[b]-byCat[a])
+    .map(c => {
+      const pct = (byCat[c]/total*100).toFixed(0);
+      return `<div class="legend-row">
+        <span class="lbl"><span class="swatch" style="background:${CAT_COLORS[c]||'#5B5248'}"></span>${escapeHtml(c)}</span>
+        <span>${pct}%</span>
+      </div>`;
+    }).join('');
+}
+
+// --- CSV export ---
+$('exportBtn').addEventListener('click', () => {
+  if(entries.length === 0){ alert('Keine Einträge zum Exportieren.'); return; }
+  const header = ['Artikel','Kategorie','Datum','Einkauf','Verkauf','Gewinn'];
+  const rows = entries.map(e => [
+    e.name, e.category||'Sonstiges', e.date,
+    e.purchase.toFixed(2), e.sale.toFixed(2), e.profit.toFixed(2)
+  ]);
+  const csv = [header, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(';')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'vinted-verkaeufe.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+// --- Init ---
+(async function init(){
+  await checkTip();
+  await loadEntries();
+  renderList();
+  renderStats();
+  window.addEventListener('resize', () => {
+    if($('view-stats').classList.contains('active')){
+      renderCumulativeChart();
+      renderMonthlyBarChart();
+    }
+  });
+})();
+</script>
+</body>
+</html>
