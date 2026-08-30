@@ -66,7 +66,7 @@
   .view.active{display:block;animation:fade .25s ease;}
   @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
 
-  .card{background:var(--paper-2);border:1.5px solid var(--ink);border-radius:10px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow);}
+  .card{background:var(--paper-2);border:1.5px solid var(--ink);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow);}
   label{display:block;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-soft);margin:14px 0 6px;}
   label:first-of-type{margin-top:0;}
   input,select{
@@ -115,7 +115,8 @@
   }
   .chip.active{background:var(--navy);border-color:var(--navy);color:var(--paper-3);}
 
-  .entry{position:relative;padding:14px 4px;border-bottom:1.5px dashed var(--line);display:grid;grid-template-columns:1fr auto;gap:2px;}
+  .entry{position:relative;padding:14px 4px;border-bottom:1.5px dashed var(--line);display:grid;grid-template-columns:1fr auto;gap:2px;transition:background .15s ease;}
+  .entry:active{background:var(--paper-3);}
   .entry:last-child{border-bottom:none;}
   .entry .name{font-weight:600;font-size:0.95rem;}
   .entry .cat{
@@ -237,10 +238,10 @@
   </header>
 
   <nav class="tabs">
-    <button class="active" data-view="add">Neu</button>
-    <button data-view="bestand">Bestand</button>
-    <button data-view="list">Verkäufe</button>
-    <button data-view="stats">Statistik</button>
+    <button class="active" data-view="add">🆕 Neu</button>
+    <button data-view="bestand">📦 Bestand</button>
+    <button data-view="list">💶 Verkäufe</button>
+    <button data-view="stats">📊 Statistik</button>
   </nav>
 
   <!-- ADD / EDIT -->
@@ -305,6 +306,15 @@
       <div><div class="num" id="bestandCount">0</div><div class="lbl">Artikel im Bestand</div></div>
       <div style="text-align:right;"><div class="num" id="bestandCapital">0,00 €</div><div class="lbl">Gebundenes Kapital</div></div>
     </div>
+    <div class="toolbar">
+      <input type="text" id="bestandSearchInput" placeholder="Artikel suchen…">
+      <select id="bestandSortSelect">
+        <option value="newest">Neueste zuerst</option>
+        <option value="oldest">Älteste zuerst</option>
+        <option value="priceDesc">Teuerste zuerst</option>
+        <option value="priceAsc">Günstigste zuerst</option>
+      </select>
+    </div>
     <div class="card" id="bestandCard">
       <div class="empty" id="bestandEmpty">Noch nichts im Bestand.<br>Leg unter „Neu" einen Artikel an.</div>
       <div id="bestandEntries"></div>
@@ -356,6 +366,7 @@
         <span id="goalCurrentLabel">0,00 € diesen Monat</span>
         <span id="goalPctLabel">0 %</span>
       </div>
+      <div id="goalBadge" style="display:none;text-align:center;font-weight:700;font-size:0.85rem;margin-top:10px;color:var(--green);">🎉 Monatsziel erreicht!</div>
     </div>
 
     <div class="panel" id="cumulativePanel" style="display:none;">
@@ -452,6 +463,10 @@ let activeCategory = 'Alle';
 const CAT_COLORS = {
   'Jeans':'#1B3A5C','Jacken':'#13233A','Shirts/Tops':'#3D6690',
   'Schuhe':'#7FAFD4','Accessoires':'#C79A46','Sonstiges':'#8391A0'
+};
+const CAT_ICONS = {
+  'Jeans':'👖','Jacken':'🧥','Shirts/Tops':'👕',
+  'Schuhe':'👟','Accessoires':'👜','Sonstiges':'🏷️'
 };
 
 const $ = (id) => document.getElementById(id);
@@ -641,29 +656,53 @@ $('saveBtn').addEventListener('click', async () => {
 });
 
 // --- Bestand view ---
+function getSortedFilteredBestand(){
+  let list = entries.filter(e => e.status === 'bestand');
+  const q = $('bestandSearchInput').value.trim().toLowerCase();
+  if(q) list = list.filter(e => e.name.toLowerCase().includes(q));
+  const sort = $('bestandSortSelect').value;
+  if(sort === 'newest') list.sort((a,b)=> b.purchaseDate.localeCompare(a.purchaseDate));
+  if(sort === 'oldest') list.sort((a,b)=> a.purchaseDate.localeCompare(b.purchaseDate));
+  if(sort === 'priceDesc') list.sort((a,b)=> b.purchase - a.purchase);
+  if(sort === 'priceAsc') list.sort((a,b)=> a.purchase - b.purchase);
+  return list;
+}
+$('bestandSearchInput').addEventListener('input', renderBestand);
+$('bestandSortSelect').addEventListener('change', renderBestand);
+
 function renderBestand(){
-  const items = entries.filter(e => e.status === 'bestand');
-  $('bestandCount').textContent = items.length;
-  $('bestandCapital').textContent = eur(items.reduce((s,e)=>s+e.purchase,0));
+  const all = entries.filter(e => e.status === 'bestand');
+  $('bestandCount').textContent = all.length;
+  $('bestandCapital').textContent = eur(all.reduce((s,e)=>s+e.purchase,0));
 
   const box = $('bestandEntries');
   const empty = $('bestandEmpty');
-  if(items.length === 0){
+  const list = getSortedFilteredBestand();
+
+  if(all.length === 0){
+    empty.textContent = 'Noch nichts im Bestand. Leg unter „Neu" einen Artikel an.';
+    empty.style.display = 'block';
+    box.innerHTML = '';
+    return;
+  }
+  if(list.length === 0){
+    empty.textContent = 'Keine Treffer für diese Suche.';
     empty.style.display = 'block';
     box.innerHTML = '';
     return;
   }
   empty.style.display = 'none';
-  const sorted = [...items].sort((a,b)=> b.purchaseDate.localeCompare(a.purchaseDate));
-  box.innerHTML = sorted.map(e => {
+  box.innerHTML = list.map(e => {
     const color = CAT_COLORS[e.category] || '#8391A0';
+    const icon = CAT_ICONS[e.category] || '🏷️';
     return `
       <div class="entry" data-id="${e.id}">
-        <div class="name">${escapeHtml(e.name)}<span class="cat" style="background:${color}">${escapeHtml(e.category)}</span></div>
+        <div class="name">${icon} ${escapeHtml(e.name)}<span class="cat" style="background:${color}">${escapeHtml(e.category)}</span></div>
         <div></div>
         <div class="date">Gekauft ${formatDate(e.purchaseDate)}</div>
         <div class="breakdown">Einkauf ${eur(e.purchase)}</div>
         <div class="actions">
+          <button class="edit-bestand" data-id="${e.id}">Bearbeiten</button>
           <button class="sell" data-id="${e.id}">Als verkauft markieren</button>
           <button class="del-bestand" data-id="${e.id}">Löschen</button>
         </div>
@@ -674,10 +713,15 @@ function renderBestand(){
   box.querySelectorAll('.sell').forEach(btn => {
     btn.addEventListener('click', () => startEdit(btn.dataset.id, true));
   });
+  box.querySelectorAll('.edit-bestand').forEach(btn => {
+    btn.addEventListener('click', () => startEdit(btn.dataset.id, false));
+  });
   box.querySelectorAll('.del-bestand').forEach(btn => {
     btn.addEventListener('click', async () => {
+      const e = entries.find(x => x.id === btn.dataset.id);
+      if(!window.confirm(`„${e ? e.name : 'Artikel'}" wirklich löschen?`)) return;
       const prev = JSON.stringify(entries);
-      entries = entries.filter(e => e.id !== btn.dataset.id);
+      entries = entries.filter(x => x.id !== btn.dataset.id);
       const ok = await saveEntries();
       if(!ok) entries = JSON.parse(prev);
       renderBestand();
@@ -746,13 +790,15 @@ function renderList(){
     const sign = e.profit >= 0 ? '+' : '';
     const cat = e.category || 'Sonstiges';
     const color = CAT_COLORS[cat] || '#8391A0';
+    const icon = CAT_ICONS[cat] || '🏷️';
     return `
       <div class="entry" data-id="${e.id}">
-        <div class="name">${escapeHtml(e.name)}<span class="cat" style="background:${color}">${escapeHtml(cat)}</span></div>
+        <div class="name">${icon} ${escapeHtml(e.name)}<span class="cat" style="background:${color}">${escapeHtml(cat)}</span></div>
         <div class="profit ${cls}">${sign}${eur(e.profit)}</div>
         <div class="date">${formatDate(e.soldDate)}</div>
         <div class="breakdown">Einkauf ${eur(e.purchase)} · Verkauf ${eur(e.sale)}</div>
         <div class="actions">
+          <button class="dup-btn" data-id="${e.id}">Duplizieren</button>
           <button class="edit-btn" data-id="${e.id}">Bearbeiten</button>
           <button class="del-btn" data-id="${e.id}">Löschen</button>
         </div>
@@ -763,6 +809,8 @@ function renderList(){
   box.querySelectorAll('.del-btn').forEach(btn => {
     btn.addEventListener('click', async (ev) => {
       ev.stopPropagation();
+      const e = entries.find(x => x.id === btn.dataset.id);
+      if(!window.confirm(`„${e ? e.name : 'Artikel'}" wirklich löschen?`)) return;
       const prev = JSON.stringify(entries);
       entries = entries.filter(e => e.id !== btn.dataset.id);
       const ok = await saveEntries();
@@ -776,6 +824,34 @@ function renderList(){
       startEdit(btn.dataset.id, false);
     });
   });
+  box.querySelectorAll('.dup-btn').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      duplicateEntry(btn.dataset.id);
+    });
+  });
+}
+
+function duplicateEntry(id){
+  const e = entries.find(x => x.id === id);
+  if(!e) return;
+  editingId = null;
+  $('itemName').value = e.name;
+  $('category').value = e.category || 'Jeans';
+  $('purchasePrice').value = e.purchase;
+  $('purchaseDate').value = todayISO();
+  $('salePrice').value = '';
+  $('soldDate').value = '';
+  setFormStatus('bestand');
+  $('editingBanner').style.display = 'none';
+  $('saveBtn').textContent = 'Eintrag speichern';
+
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelector('nav.tabs button[data-view="add"]').classList.add('active');
+  $('view-add').classList.add('active');
+  showToast(`„${e.name}" als Vorlage übernommen`, 'ok');
+  $('purchasePrice').focus();
 }
 
 function startEdit(id, forceSell){
@@ -852,6 +928,7 @@ function renderGoal(){
   $('goalFill').classList.toggle('reached', current >= target && target > 0);
   $('goalCurrentLabel').textContent = eur(current) + ' diesen Monat';
   $('goalPctLabel').textContent = target > 0 ? Math.round((current/target)*100) + ' %' : 'Kein Ziel gesetzt';
+  $('goalBadge').style.display = (target > 0 && current >= target) ? 'block' : 'none';
 }
 $('goalSaveBtn').addEventListener('click', async () => {
   const v = parseFloat($('goalInput').value);
@@ -952,7 +1029,7 @@ function renderCategoryAvgBars(){
     const color = CAT_COLORS[a.cat] || '#8391A0';
     return `
       <div class="bar-row" data-info="${escapeHtml(a.cat)}: Ø ${eur(a.avg)} über ${a.count} Artikel">
-        <div class="label"><span>${escapeHtml(a.cat)}</span><span class="${cls}">${eur(a.avg)}</span></div>
+        <div class="label"><span>${CAT_ICONS[a.cat]||'🏷️'} ${escapeHtml(a.cat)}</span><span class="${cls}">${eur(a.avg)}</span></div>
         <div class="bar-track"><div class="bar-fill" style="width:${Math.max(Math.abs(a.avg)/max*100,4)}%;background:${color}"></div></div>
       </div>
     `;
@@ -1183,7 +1260,7 @@ function renderDonutChart(){
     .map(c => {
       const pct = (byCat[c]/total*100).toFixed(0);
       return `<div class="legend-row" data-cat="${escapeHtml(c)}">
-        <span class="lbl"><span class="swatch" style="background:${CAT_COLORS[c]||'#8391A0'}"></span>${escapeHtml(c)}</span>
+        <span class="lbl"><span class="swatch" style="background:${CAT_COLORS[c]||'#8391A0'}"></span>${CAT_ICONS[c]||'🏷️'} ${escapeHtml(c)}</span>
         <span>${pct}%</span>
       </div>`;
     }).join('');
