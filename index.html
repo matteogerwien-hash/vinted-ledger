@@ -3,231 +3,247 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Mein Vinted-Ledger</title>
+<title>Vinted-Ledger</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#EEF2F6">
+<meta name="theme-color" content="#0B1220">
 <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#EEF2F6;
-    --paper-2:#DFE7EF;
-    --paper-3:#F8FAFC;
-    --ink:#13233A;
-    --ink-soft:#51677D;
-    --navy:#1B3A5C;
-    --navy-light:#3D6690;
-    --sky:#7FAFD4;
-    --gold:#C79A46;
-    --gold-light:#E3CA92;
-    --green:#3F7A5D;
-    --red:#B5495B;
-    --line:#C7D3DE;
-    --shadow: 0 3px 0 rgba(19,35,58,0.9);
+    --bg:#0B1220;
+    --surface:#121B2C;
+    --surface-2:#1B2740;
+    --surface-3:#0E1626;
+    --border:#243247;
+    --text:#EEF2F7;
+    --text-soft:#8AA0BC;
+    --text-faint:#6E85A0;
+    --gold:#D9B36C;
+    --green:#4FAE82;
+    --red:#E1667A;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:
-      radial-gradient(circle at 1px 1px, rgba(19,35,58,0.06) 1px, transparent 0) 0 0/16px 16px,
-      var(--paper);
-    color:var(--ink);
+    background:var(--bg);
+    color:var(--text);
     font-family:'Inter',sans-serif;
     min-height:100vh;
-    padding:0 0 70px;
+    padding:0 0 100px;
     -webkit-tap-highlight-color:transparent;
   }
   .wrap{max-width:540px;margin:0 auto;padding:0 18px;}
 
-  header{padding:32px 0 6px;text-align:center;position:relative;}
-  .tag-hole{width:14px;height:14px;border:2px solid var(--ink);border-radius:50%;margin:0 auto 10px;background:var(--paper);}
-  h1{font-family:'Fraunces',serif;font-optical-sizing:auto;font-weight:600;font-size:1.9rem;margin:0;letter-spacing:-0.01em;color:var(--navy);}
-  header p{font-size:0.8rem;color:var(--ink-soft);margin:6px 0 0;text-transform:uppercase;letter-spacing:0.12em;}
+  header{padding:22px 0 4px;display:flex;align-items:center;gap:10px;}
+  header .logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(155deg,#1B3A5C,#0B1220);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  header .logo svg{width:18px;height:18px;}
+  header h1{font-family:'Inter',sans-serif;font-weight:800;font-size:1.15rem;margin:0;letter-spacing:-0.01em;}
+  header p{font-size:0.68rem;color:var(--text-faint);margin:1px 0 0;text-transform:uppercase;letter-spacing:0.1em;}
 
   .install-tip{
-    font-size:0.74rem;color:var(--ink-soft);text-align:center;
-    background:var(--paper-2);border:1px dashed var(--line);border-radius:8px;
-    padding:8px 10px;margin:14px 0 0;display:flex;justify-content:space-between;align-items:center;gap:8px;
+    font-size:0.72rem;color:var(--text-soft);text-align:left;
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:10px 12px;margin:14px 0 0;display:flex;justify-content:space-between;align-items:center;gap:8px;
   }
-  .install-tip button{background:none;border:none;color:var(--ink-soft);font-size:0.9rem;cursor:pointer;line-height:1;padding:2px;}
+  .install-tip button{background:none;border:none;color:var(--text-faint);font-size:0.9rem;cursor:pointer;line-height:1;padding:2px;}
 
-  nav.tabs{display:flex;gap:6px;margin:20px 0 20px;position:sticky;top:0;padding-top:10px;background:var(--paper);z-index:5;}
-  nav.tabs button{
-    flex:1;font-family:'Inter',sans-serif;font-weight:600;font-size:0.72rem;
-    padding:10px 3px;background:var(--paper-2);border:1.5px solid var(--ink);
-    border-radius:6px 6px 2px 2px;color:var(--ink-soft);cursor:pointer;transition:all .15s ease;
+  .view{display:none;padding-top:18px;}
+  .view.active{display:block;animation:fade .22s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  /* Bottom nav (native app feel) */
+  .bottom-nav{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;
+    display:flex;background:rgba(18,27,44,0.92);backdrop-filter:blur(14px);
+    border-top:1px solid var(--border);
+    padding-bottom:env(safe-area-inset-bottom, 0px);
   }
-  nav.tabs button.active{background:var(--navy);color:var(--paper-3);border-color:var(--ink);box-shadow:var(--shadow);}
-  nav.tabs button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  .bottom-nav button{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    padding:10px 2px 9px;background:none;border:none;color:var(--text-faint);
+    font-family:'Inter',sans-serif;font-size:0.62rem;font-weight:600;cursor:pointer;
+  }
+  .bottom-nav button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  .bottom-nav button.active{color:var(--gold);}
+  .bottom-nav button:focus-visible{outline:2px solid var(--gold);outline-offset:-2px;}
 
-  .view{display:none;}
-  .view.active{display:block;animation:fade .25s ease;}
-  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
-
-  .card{background:var(--paper-2);border:1.5px solid var(--ink);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow);}
-  label{display:block;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-soft);margin:14px 0 6px;}
+  /* Cards */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px;}
+  label{display:block;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-soft);margin:14px 0 6px;}
   label:first-of-type{margin-top:0;}
-  input,select{
-    width:100%;font-family:'JetBrains Mono',monospace;font-size:1rem;padding:10px 12px;
-    border:1.5px solid var(--line);border-radius:6px;background:var(--paper-3);color:var(--ink);
+  input,select,textarea{
+    width:100%;font-family:'Inter',sans-serif;font-size:0.95rem;padding:11px 13px;
+    border:1px solid var(--border);border-radius:10px;background:var(--surface-3);color:var(--text);
   }
-  input[type="text"],select{font-family:'Inter',sans-serif;}
-  input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+  input[type="number"]{font-family:'JetBrains Mono',monospace;}
+  input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:0;border-color:var(--gold);}
+  ::placeholder{color:var(--text-faint);}
 
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 
-  /* segmented status toggle */
-  .segmented{display:flex;border:1.5px solid var(--ink);border-radius:8px;overflow:hidden;margin-bottom:4px;}
+  .segmented{display:flex;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:4px;background:var(--surface-3);}
   .segmented button{
-    flex:1;padding:10px 6px;background:var(--paper-3);border:none;font-weight:700;font-size:0.82rem;
-    color:var(--ink-soft);cursor:pointer;border-right:1.5px solid var(--ink);
+    flex:1;padding:11px 6px;background:transparent;border:none;font-weight:600;font-size:0.85rem;
+    color:var(--text-soft);cursor:pointer;
   }
-  .segmented button:last-child{border-right:none;}
-  .segmented button.active{background:var(--navy);color:var(--paper-3);}
+  .segmented button.active{background:var(--gold);color:var(--bg);font-weight:700;}
 
-  .btn{width:100%;margin-top:20px;padding:13px;background:var(--navy);color:var(--paper-3);border:none;border-radius:6px;font-weight:700;font-size:0.95rem;cursor:pointer;letter-spacing:0.02em;box-shadow:0 3px 0 #0B1D30;}
-  .btn:active{transform:translateY(2px);box-shadow:0 1px 0 #0B1D30;}
-  .btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
-  .btn:disabled{opacity:0.6;}
-  .btn.ghost{background:transparent;color:var(--ink-soft);border:1.5px solid var(--line);margin-top:10px;box-shadow:none;}
-  .btn.small{width:auto;padding:8px 14px;font-size:0.78rem;margin-top:0;box-shadow:none;}
+  .btn{width:100%;margin-top:20px;padding:14px;background:var(--gold);color:var(--bg);border:none;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;letter-spacing:0.01em;}
+  .btn:active{opacity:0.85;}
+  .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+  .btn:disabled{opacity:0.5;}
+  .btn.ghost{background:transparent;color:var(--text-soft);border:1px solid var(--border);margin-top:10px;}
+  .btn.small{width:auto;padding:9px 16px;font-size:0.8rem;margin-top:0;}
+
+  .check-row{display:flex;align-items:center;gap:9px;margin:16px 0 4px;}
+  .check-row input[type="checkbox"]{width:auto;accent-color:var(--gold);width:18px;height:18px;}
+  .check-row span{font-size:0.85rem;color:var(--text-soft);}
 
   .editing-banner{
     display:flex;justify-content:space-between;align-items:center;
-    background:var(--gold-light);border:1.5px solid var(--ink);border-radius:8px;
-    padding:10px 14px;margin-bottom:14px;font-size:0.82rem;font-weight:600;color:var(--ink);
+    background:var(--surface-2);border:1px solid var(--gold);border-radius:10px;
+    padding:10px 14px;margin-bottom:14px;font-size:0.82rem;font-weight:600;color:var(--text);
   }
-  .editing-banner button{background:none;border:none;text-decoration:underline;font-size:0.78rem;cursor:pointer;color:var(--ink);}
+  .editing-banner button{background:none;border:none;text-decoration:underline;font-size:0.78rem;cursor:pointer;color:var(--gold);}
 
-  .hint{font-size:0.78rem;color:var(--ink-soft);margin-top:8px;}
+  .hint{font-size:0.76rem;color:var(--text-faint);margin-top:8px;}
 
-  /* filter / sort / search bar */
-  .toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
-  .toolbar select{width:auto;flex:1;min-width:120px;padding:8px 10px;font-size:0.82rem;}
-  .toolbar input[type="text"]{width:auto;flex:1.4;min-width:130px;padding:8px 10px;font-size:0.82rem;}
+  /* toolbar */
+  .toolbar{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center;}
+  .toolbar select{width:auto;flex:1;min-width:120px;padding:9px 10px;font-size:0.82rem;}
+  .toolbar input[type="text"]{width:auto;flex:1.4;min-width:130px;padding:9px 10px;font-size:0.82rem;}
   .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
   .chip{
-    font-size:0.72rem;padding:6px 12px;border-radius:20px;border:1.5px solid var(--line);
-    background:var(--paper-2);color:var(--ink-soft);cursor:pointer;font-weight:600;
+    font-size:0.72rem;padding:6px 13px;border-radius:20px;border:1px solid var(--border);
+    background:var(--surface);color:var(--text-soft);cursor:pointer;font-weight:600;
   }
-  .chip.active{background:var(--navy);border-color:var(--navy);color:var(--paper-3);}
+  .chip.active{background:var(--gold);border-color:var(--gold);color:var(--bg);}
 
-  .entry{position:relative;padding:14px 4px;border-bottom:1.5px dashed var(--line);display:grid;grid-template-columns:1fr auto;gap:2px;transition:background .15s ease;}
-  .entry:active{background:var(--paper-3);}
+  /* entries */
+  .entry{position:relative;padding:14px 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:2px;transition:background .15s ease;}
   .entry:last-child{border-bottom:none;}
+  .entry:active{background:var(--surface-2);}
   .entry .name{font-weight:600;font-size:0.95rem;}
   .entry .cat{
-    display:inline-block;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;
-    padding:2px 7px;border-radius:10px;margin-left:6px;color:var(--paper-3);vertical-align:middle;
+    display:inline-block;font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;
+    padding:2px 8px;border-radius:6px;margin-left:7px;vertical-align:middle;
   }
-  .entry .date{font-size:0.72rem;color:var(--ink-soft);grid-column:1;}
+  .entry .date{font-size:0.72rem;color:var(--text-faint);grid-column:1;}
   .entry .profit{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1rem;text-align:right;}
   .entry .profit.pos{color:var(--green);}
   .entry .profit.neg{color:var(--red);}
-  .entry .breakdown{grid-column:1/-1;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--ink-soft);margin-top:4px;}
-  .entry .actions{grid-column:1/-1;justify-self:end;display:flex;gap:12px;margin-top:4px;}
-  .entry .actions button{font-size:0.72rem;color:var(--ink-soft);background:none;border:none;text-decoration:underline;cursor:pointer;padding:2px 0;}
-  .entry .actions button.sell{color:var(--navy);font-weight:700;}
+  .entry .breakdown{grid-column:1/-1;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-faint);margin-top:4px;}
+  .entry .note{grid-column:1/-1;font-size:0.76rem;color:var(--text-soft);margin-top:4px;font-style:italic;}
+  .entry .listed-toggle{grid-column:1/-1;display:flex;align-items:center;gap:7px;margin-top:8px;}
+  .entry .listed-toggle input{width:auto;accent-color:var(--gold);width:16px;height:16px;}
+  .entry .listed-toggle span{font-size:0.74rem;color:var(--text-soft);}
+  .entry .actions{grid-column:1/-1;justify-self:end;display:flex;gap:14px;margin-top:8px;}
+  .entry .actions button{font-size:0.72rem;color:var(--text-faint);background:none;border:none;text-decoration:underline;cursor:pointer;padding:2px 0;}
+  .entry .actions button.sell{color:var(--gold);font-weight:700;text-decoration:none;}
 
-  .empty{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:0.88rem;}
+  .empty{text-align:center;padding:44px 20px;color:var(--text-faint);font-size:0.88rem;}
 
-  /* Bestand summary */
-  .bestand-summary{
-    display:flex;justify-content:space-between;align-items:center;
-    background:var(--navy);color:var(--paper-3);border-radius:10px;padding:16px 18px;margin-bottom:16px;
-    border:1.5px solid var(--ink);box-shadow:var(--shadow);
+  /* Home dashboard */
+  .hero-card{
+    background:radial-gradient(ellipse at top, rgba(217,179,108,0.12), transparent 60%), var(--surface);
+    border:1px solid var(--border);border-radius:20px;padding:30px 20px;text-align:center;margin-bottom:16px;
   }
-  .bestand-summary .num{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:700;}
-  .bestand-summary .lbl{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;opacity:0.85;}
+  .hero-card-label{font-size:0.72rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;}
+  .hero-card-num{font-family:'Fraunces',serif;font-weight:700;font-size:2.8rem;line-height:1.05;}
+  .hero-card-num.pos{color:var(--green);}
+  .hero-card-num.neg{color:var(--red);}
+  .hero-card-sub{font-size:0.78rem;color:var(--text-soft);margin-top:6px;}
 
-  /* Hero + Receipt */
-  .receipt{background:var(--paper-3);border:1.5px solid var(--ink);border-radius:2px;padding:26px 20px 32px;position:relative;box-shadow:0 6px 0 -2px var(--paper-2), 0 6px 1px -1px var(--ink);margin-bottom:26px;}
-  .receipt::after{content:"";position:absolute;left:0;right:0;bottom:-9px;height:14px;
-    background:linear-gradient(-45deg, var(--paper-3) 8px, transparent 0),linear-gradient(45deg, var(--paper-3) 8px, transparent 0);
-    background-size:16px 16px;background-position:0 0;}
-  .receipt .sub{text-align:center;font-size:0.7rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px;}
-  .hero-num{
-    font-family:'Fraunces',serif;font-weight:700;font-size:2.6rem;text-align:center;
-    letter-spacing:-0.01em;margin:0 0 2px;line-height:1.05;
-  }
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;}
+  .stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;}
+  .stat-tile-label{font-size:0.68rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+  .stat-tile-val{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.15rem;}
+  .stat-tile-val.warn{color:var(--gold);}
+
+  .quick-actions{display:flex;flex-direction:column;gap:10px;}
+  .quick-btn{padding:14px;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer;border:none;background:var(--gold);color:var(--bg);}
+  .quick-btn.ghost{background:var(--surface);color:var(--text);border:1px solid var(--border);}
+
+  /* Hero receipt on Stats tab */
+  .receipt{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px 22px;margin-bottom:22px;}
+  .receipt .sub{text-align:center;font-size:0.72rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px;}
+  .hero-num{font-family:'Fraunces',serif;font-weight:700;font-size:2.5rem;text-align:center;margin:0 0 2px;line-height:1.05;}
   .hero-num.pos{color:var(--green);}
   .hero-num.neg{color:var(--red);}
-  .hero-label{text-align:center;font-size:0.72rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:18px;}
-  .divider{border:none;border-top:1.5px dashed var(--line);margin:16px 0;}
-  .line-item{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:0.86rem;padding:6px 0;border-bottom:1px dotted var(--line);}
-  .line-item:last-child{border-bottom:none;}
+  .hero-label{text-align:center;font-size:0.72rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:18px;}
+  .divider{border:none;border-top:1px solid var(--border);margin:16px 0;}
+  .line-item{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:0.85rem;padding:7px 0;color:var(--text-soft);}
+  .line-item .val{color:var(--text);}
   .line-item .val.pos{color:var(--green);}
   .line-item .val.neg{color:var(--red);}
 
   .panel{margin-bottom:22px;}
-  .panel h3{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-soft);margin:0 0 4px;font-weight:700;}
-  .panel .tap-hint{font-size:0.68rem;color:var(--ink-soft);margin:0 0 10px;font-style:italic;}
-  .chart-box{background:var(--paper-2);border:1.5px solid var(--line);border-radius:10px;padding:16px;position:relative;box-shadow:var(--shadow);}
+  .panel h3{font-size:0.74rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-soft);margin:0 0 4px;font-weight:700;}
+  .panel .tap-hint{font-size:0.68rem;color:var(--text-faint);margin:0 0 10px;font-style:italic;}
+  .chart-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;}
   .chart-box canvas{display:block;cursor:pointer;}
 
   .chart-tooltip{
-    position:absolute;pointer-events:none;background:var(--navy);color:var(--paper-3);
-    font-family:'JetBrains Mono',monospace;font-size:0.72rem;padding:6px 9px;border-radius:6px;
+    position:absolute;pointer-events:none;background:var(--gold);color:var(--bg);
+    font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:700;padding:6px 9px;border-radius:6px;
     white-space:nowrap;opacity:0;transform:translate(-50%,-8px);transition:opacity .12s ease;z-index:10;
   }
   .chart-tooltip.show{opacity:1;}
-  .chart-tooltip::after{content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--navy);}
+  .chart-tooltip::after{content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--gold);}
 
-  .legend-inline{display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:0.72rem;color:var(--ink-soft);}
+  .legend-inline{display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:0.72rem;color:var(--text-soft);}
   .legend-inline span{display:flex;align-items:center;gap:5px;}
 
   .donut-wrap{display:flex;align-items:center;gap:18px;}
   .legend{flex:1;display:flex;flex-direction:column;gap:8px;}
-  .legend-row{display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;padding:3px 4px;border-radius:5px;transition:background .15s ease;cursor:pointer;}
-  .legend-row.highlight{background:var(--paper-3);}
+  .legend-row{display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;padding:4px 6px;border-radius:6px;cursor:pointer;color:var(--text-soft);}
   .legend-row .lbl{display:flex;align-items:center;gap:7px;}
   .swatch{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
 
-  .barlist h3{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-soft);margin:0 0 10px;font-weight:700;}
+  .barlist h3{font-size:0.74rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-soft);margin:0 0 10px;font-weight:700;}
   .bar-row{margin-bottom:10px;cursor:pointer;}
-  .bar-row .label{display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:3px;}
-  .bar-track{height:9px;background:var(--paper-2);border-radius:4px;overflow:hidden;}
+  .bar-row .label{display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:4px;color:var(--text-soft);}
+  .bar-track{height:8px;background:var(--surface-3);border-radius:4px;overflow:hidden;}
   .bar-fill{height:100%;background:var(--gold);border-radius:4px;transition:width .3s ease;}
 
-  /* Year overview */
-  .year-card{background:var(--paper-2);border:1.5px solid var(--ink);border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);}
+  .year-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px 17px;margin-bottom:10px;}
   .year-card-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
-  .year-card-header .yr{font-family:'Fraunces',serif;font-weight:700;font-size:1.15rem;}
+  .year-card-header .yr{font-family:'Inter',sans-serif;font-weight:800;font-size:1.05rem;}
   .year-card-header .val{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1rem;}
-  .year-card-meta{font-size:0.72rem;color:var(--ink-soft);margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .year-card-meta{font-size:0.72rem;color:var(--text-faint);margin-top:8px;font-family:'JetBrains Mono',monospace;}
 
-  /* Goal panel */
-  .goal-card{background:var(--paper-2);border:1.5px solid var(--ink);border-radius:10px;padding:18px;margin-bottom:22px;box-shadow:var(--shadow);}
+  .goal-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:22px;}
+  .goal-card h3{margin:0 0 12px;font-size:0.74rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-soft);}
   .goal-card .goal-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;}
   .goal-card .goal-row input{flex:1;}
-  .goal-progress-track{height:14px;background:var(--paper-3);border:1.5px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:6px;}
+  .goal-progress-track{height:12px;background:var(--surface-3);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:6px;}
   .goal-progress-fill{height:100%;background:var(--gold);border-radius:8px 0 0 8px;transition:width .4s ease;}
   .goal-progress-fill.reached{background:var(--green);}
-  .goal-meta{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;}
+  .goal-meta{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-soft);font-family:'JetBrains Mono',monospace;}
+  .goal-badge{display:none;text-align:center;font-weight:700;font-size:0.85rem;margin-top:10px;color:var(--green);}
 
-  /* Backup panel */
   .backup-row{display:flex;gap:10px;}
   .backup-row .btn{margin-top:0;}
   .export-btn{
-    display:block;width:100%;text-align:center;padding:12px;margin-top:4px;
-    background:transparent;border:1.5px solid var(--ink);border-radius:8px;
-    font-weight:600;font-size:0.85rem;cursor:pointer;color:var(--ink);
+    display:block;width:100%;text-align:center;padding:13px;margin-top:4px;
+    background:transparent;border:1px solid var(--border);border-radius:12px;
+    font-weight:600;font-size:0.85rem;cursor:pointer;color:var(--text-soft);
   }
 
-  /* Toasts */
-  .toast-stack{position:fixed;left:0;right:0;bottom:18px;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:100;pointer-events:none;}
+  .toast-stack{position:fixed;left:0;right:0;bottom:90px;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:100;pointer-events:none;}
   .toast{
     font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:600;padding:11px 18px;border-radius:24px;
-    background:var(--navy);color:var(--paper-3);box-shadow:0 4px 14px rgba(19,35,58,0.35);
+    background:var(--surface-2);color:var(--text);border:1px solid var(--border);
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
     opacity:0;transform:translateY(8px);transition:all .25s ease;max-width:85vw;text-align:center;
   }
-  .toast.ok{background:var(--green);}
-  .toast.err{background:var(--red);}
+  .toast.ok{border-color:var(--green);color:var(--green);}
+  .toast.err{border-color:var(--red);color:var(--red);}
   .toast.show{opacity:1;transform:translateY(0);}
 
   @media (prefers-reduced-motion: reduce){ .view.active{animation:none;} .toast{transition:none;} }
@@ -237,24 +253,52 @@
 <div class="wrap">
 
   <header>
-    <div class="tag-hole"></div>
-    <h1>Mein Vinted-Ledger</h1>
-    <p>Bestand · Verkauf · Gewinn</p>
-    <div class="install-tip" id="installTip">
-      <span>Tipp: Über „Zum Home-Bildschirm hinzufügen" im Browser-Menü läuft's wie eine echte App.</span>
-      <button id="dismissTip" aria-label="Tipp schließen">✕</button>
+    <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#D9B36C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M3 8v8l9 4 9-4V8"/></svg></div>
+    <div>
+      <h1>Vinted-Ledger</h1>
+      <p>Bestand · Verkauf · Gewinn</p>
     </div>
   </header>
 
-  <nav class="tabs">
-    <button class="active" data-view="add">🆕 Neu</button>
-    <button data-view="bestand">📦 Bestand</button>
-    <button data-view="list">💶 Verkäufe</button>
-    <button data-view="stats">📊 Statistik</button>
-  </nav>
+  <div class="install-tip" id="installTip">
+    <span>Zum Home-Bildschirm hinzufügen für die volle App-Erfahrung.</span>
+    <button id="dismissTip" aria-label="Tipp schließen">✕</button>
+  </div>
+
+  <!-- HOME / ÜBERSICHT -->
+  <section class="view active" id="view-home">
+    <div class="hero-card">
+      <div class="hero-card-label">Gesamtgewinn</div>
+      <div class="hero-card-num" id="homeHeroProfit">0,00 €</div>
+      <div class="hero-card-sub" id="homeHeroSub">0 verkaufte Artikel</div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-tile">
+        <div class="stat-tile-label">Diesen Monat</div>
+        <div class="stat-tile-val" id="homeMonthProfit">0,00 €</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-tile-label">Im Bestand</div>
+        <div class="stat-tile-val" id="homeBestandCount">0 Artikel</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-tile-label">Gebundenes Kapital</div>
+        <div class="stat-tile-val" id="homeBestandCapital">0,00 €</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-tile-label">Nicht hochgeladen</div>
+        <div class="stat-tile-val warn" id="homeNotListed">0</div>
+      </div>
+    </div>
+    <div class="quick-actions">
+      <button class="quick-btn" data-goto="add">+ Neuer Artikel</button>
+      <button class="quick-btn ghost" data-goto="bestand">Bestand ansehen</button>
+      <button class="quick-btn ghost" data-goto="stats">Statistik ansehen</button>
+    </div>
+  </section>
 
   <!-- ADD / EDIT -->
-  <section class="view active" id="view-add">
+  <section class="view" id="view-add">
     <div class="editing-banner" id="editingBanner" style="display:none;">
       <span id="editingBannerText">Eintrag wird bearbeitet</span>
       <button id="cancelEdit">Abbrechen</button>
@@ -290,6 +334,11 @@
         </div>
       </div>
 
+      <div id="listedRow" class="check-row">
+        <input type="checkbox" id="listedCheckbox">
+        <span>Bereits auf Vinted hochgeladen</span>
+      </div>
+
       <div id="saleFields" style="display:none;">
         <div class="row2">
           <div>
@@ -303,6 +352,9 @@
         </div>
       </div>
 
+      <label for="itemNote">Notiz (optional)</label>
+      <input type="text" id="itemNote" placeholder="z. B. Größe M, kleiner Fleck…">
+
       <p class="hint" id="formHint">Artikel wird als „im Bestand" gespeichert, bis du ihn als verkauft markierst.</p>
 
       <button class="btn" id="saveBtn">Eintrag speichern</button>
@@ -311,9 +363,9 @@
 
   <!-- BESTAND -->
   <section class="view" id="view-bestand">
-    <div class="bestand-summary">
-      <div><div class="num" id="bestandCount">0</div><div class="lbl">Artikel im Bestand</div></div>
-      <div style="text-align:right;"><div class="num" id="bestandCapital">0,00 €</div><div class="lbl">Gebundenes Kapital</div></div>
+    <div class="stat-grid" style="margin-bottom:14px;">
+      <div class="stat-tile"><div class="stat-tile-label">Artikel im Bestand</div><div class="stat-tile-val" id="bestandCount">0</div></div>
+      <div class="stat-tile"><div class="stat-tile-label">Gebundenes Kapital</div><div class="stat-tile-val" id="bestandCapital">0,00 €</div></div>
     </div>
     <div class="toolbar">
       <input type="text" id="bestandSearchInput" placeholder="Artikel suchen…">
@@ -324,8 +376,12 @@
         <option value="priceAsc">Günstigste zuerst</option>
       </select>
     </div>
+    <div class="chips">
+      <button class="chip active" id="bestandFilterAll">Alle</button>
+      <button class="chip" id="bestandFilterUnlisted">Nicht hochgeladen</button>
+    </div>
     <div class="card" id="bestandCard">
-      <div class="empty" id="bestandEmpty">Noch nichts im Bestand.<br>Leg unter „Neu" einen Artikel an.</div>
+      <div class="empty" id="bestandEmpty">Noch nichts im Bestand.</div>
       <div id="bestandEntries"></div>
     </div>
   </section>
@@ -343,7 +399,7 @@
     </div>
     <div class="chips" id="categoryChips"></div>
     <div class="card" id="listCard">
-      <div class="empty" id="listEmpty">Noch keine Verkäufe eingetragen.<br>Leg unter „Neu" los.</div>
+      <div class="empty" id="listEmpty">Noch keine Verkäufe eingetragen.</div>
       <div id="listEntries"></div>
     </div>
   </section>
@@ -365,7 +421,7 @@
     </div>
 
     <div class="goal-card">
-      <h3 style="margin:0 0 12px;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-soft);">Monatsziel</h3>
+      <h3>Monatsziel</h3>
       <div class="goal-row">
         <input type="number" step="1" min="0" id="goalInput" placeholder="z. B. 200">
         <button class="btn small" id="goalSaveBtn">Speichern</button>
@@ -375,7 +431,7 @@
         <span id="goalCurrentLabel">0,00 € diesen Monat</span>
         <span id="goalPctLabel">0 %</span>
       </div>
-      <div id="goalBadge" style="display:none;text-align:center;font-weight:700;font-size:0.85rem;margin-top:10px;color:var(--green);">🎉 Monatsziel erreicht!</div>
+      <div class="goal-badge" id="goalBadge">Monatsziel erreicht!</div>
     </div>
 
     <div class="panel barlist" id="yearOverviewPanel" style="display:none;">
@@ -399,30 +455,10 @@
         <canvas id="monthlyBarChart"></canvas>
         <div class="chart-tooltip" id="monthlyTooltip"></div>
         <div class="legend-inline">
-          <span><span class="swatch" style="background:#3F7A5D"></span> Verkauf</span>
-          <span><span class="swatch" style="background:#B5495B"></span> Einkauf</span>
+          <span><span class="swatch" style="background:#4FAE82"></span> Verkauf</span>
+          <span><span class="swatch" style="background:#E1667A"></span> Einkauf</span>
         </div>
       </div>
-    </div>
-
-    <div class="panel" id="donutPanel" style="display:none;">
-      <h3>Verkäufe nach Kategorie</h3>
-      <p class="tap-hint">Tippe auf ein Segment oder die Legende</p>
-      <div class="chart-box donut-wrap">
-        <canvas id="donutChart" width="120" height="120"></canvas>
-        <div class="chart-tooltip" id="donutTooltip"></div>
-        <div class="legend" id="donutLegend"></div>
-      </div>
-    </div>
-
-    <div class="panel barlist" id="catAvgPanel" style="display:none;">
-      <h3>Ø Gewinn je Kategorie</h3>
-      <div id="catAvgBars"></div>
-    </div>
-
-    <div class="panel barlist" id="topList" style="display:none;">
-      <h3>Top-Verkäufe nach Gewinn</h3>
-      <div id="topBars"></div>
     </div>
 
     <div class="panel" id="salesCountPanel" style="display:none;">
@@ -443,9 +479,29 @@
       </div>
     </div>
 
+    <div class="panel" id="donutPanel" style="display:none;">
+      <h3>Verkäufe nach Kategorie</h3>
+      <p class="tap-hint">Tippe auf ein Segment oder die Legende</p>
+      <div class="chart-box donut-wrap">
+        <canvas id="donutChart" width="120" height="120"></canvas>
+        <div class="chart-tooltip" id="donutTooltip"></div>
+        <div class="legend" id="donutLegend"></div>
+      </div>
+    </div>
+
+    <div class="panel barlist" id="catAvgPanel" style="display:none;">
+      <h3>Ø Gewinn je Kategorie</h3>
+      <div id="catAvgBars"></div>
+    </div>
+
     <div class="panel barlist" id="oldestStockPanel" style="display:none;">
       <h3>Ältester Bestand</h3>
       <div id="oldestStockBars"></div>
+    </div>
+
+    <div class="panel barlist" id="topList" style="display:none;">
+      <h3>Top-Verkäufe nach Gewinn</h3>
+      <div id="topBars"></div>
     </div>
 
     <div class="panel">
@@ -462,6 +518,29 @@
 
 </div>
 
+<nav class="bottom-nav">
+  <button class="active" data-view="home">
+    <svg viewBox="0 0 24 24"><path d="M4 11.5L12 4l8 7.5"/><path d="M6 10v9a1 1 0 001 1h4v-6h2v6h4a1 1 0 001-1v-9"/></svg>
+    Home
+  </button>
+  <button data-view="add">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+    Neu
+  </button>
+  <button data-view="bestand">
+    <svg viewBox="0 0 24 24"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M3 8v8l9 4 9-4V8"/><path d="M12 12v8"/></svg>
+    Bestand
+  </button>
+  <button data-view="list">
+    <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1.5L14 21l-2-1.5L10 21l-2-1.5L6 21V3z"/><path d="M9 8h6M9 12h6"/></svg>
+    Verkauf
+  </button>
+  <button data-view="stats">
+    <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20V14"/><path d="M3 20h18"/></svg>
+    Stats
+  </button>
+</nav>
+
 <div class="toast-stack" id="toastStack"></div>
 
 <script>
@@ -473,24 +552,20 @@ let goal = { monthly: 0 };
 let editingId = null;
 let currentStatus = 'bestand';
 let activeCategory = 'Alle';
+let bestandOnlyUnlisted = false;
 
 const CAT_COLORS = {
-  'Jeans':'#1B3A5C','Jacken':'#13233A','Shirts/Tops':'#3D6690',
-  'Schuhe':'#7FAFD4','Accessoires':'#C79A46','Sonstiges':'#8391A0'
+  'Jeans':'#3E6FB0','Jacken':'#24344F','Shirts/Tops':'#6C8CBF',
+  'Schuhe':'#C98A4B','Accessoires':'#B08D3E','Sonstiges':'#5B6B80'
 };
-const CAT_ICONS = {
-  'Jeans':'👖','Jacken':'🧥','Shirts/Tops':'👕',
-  'Schuhe':'👟','Accessoires':'👜','Sonstiges':'🏷️'
-};
-const CAT_DARK_TEXT = new Set(['Schuhe','Accessoires','Sonstiges']); // light backgrounds need dark text for contrast
-function catTextColor(cat){ return CAT_DARK_TEXT.has(cat) ? '#13233A' : '#F8FAFC'; }
+const CAT_DARK_TEXT = new Set(['Shirts/Tops','Schuhe','Accessoires']); // computed via WCAG contrast check
+function catTextColor(cat){ return CAT_DARK_TEXT.has(cat) ? '#0B1220' : '#EEF2F7'; }
 
 const $ = (id) => document.getElementById(id);
 const eur = (n) => n.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
 const todayISO = () => new Date().toISOString().slice(0,10);
 
 function normalize(e){
-  // backward compatibility for entries saved before Bestand/status existed
   return {
     id: e.id,
     name: e.name,
@@ -500,7 +575,9 @@ function normalize(e){
     status: e.status || (e.sale != null ? 'verkauft' : 'bestand'),
     sale: e.sale != null ? e.sale : null,
     soldDate: e.soldDate || e.date || null,
-    profit: e.sale != null ? (e.sale - (e.purchase||0)) : null
+    profit: e.sale != null ? (e.sale - (e.purchase||0)) : null,
+    listed: e.listed === true,
+    note: e.note || ''
   };
 }
 
@@ -518,17 +595,22 @@ function showToast(msg, type){
   }, type === 'err' ? 3200 : 1600);
 }
 
-// --- Tabs ---
-document.querySelectorAll('nav.tabs button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    btn.classList.add('active');
-    $('view-' + btn.dataset.view).classList.add('active');
-    if (btn.dataset.view === 'list') renderList();
-    if (btn.dataset.view === 'bestand') renderBestand();
-    if (btn.dataset.view === 'stats') renderStats();
-  });
+// --- Tab switching ---
+function switchTab(view){
+  document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  $('view-' + view).classList.add('active');
+  if (view === 'home') renderHome();
+  if (view === 'list') renderList();
+  if (view === 'bestand') renderBestand();
+  if (view === 'stats') renderStats();
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.bottom-nav button').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.view));
+});
+document.querySelectorAll('[data-goto]').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.goto));
 });
 
 // --- Install tip ---
@@ -543,13 +625,11 @@ async function checkTip(){
   }catch(e){}
 }
 
-// --- Storage: localStorage-backed (this app runs as a standalone site, not inside a Claude artifact) ---
+// --- Storage: localStorage-backed (standalone site, not a Claude artifact) ---
 const storage = {
   async get(key){
-    try{
-      const v = localStorage.getItem(key);
-      return v !== null ? { key, value: v } : null;
-    }catch(e){ throw e; }
+    const v = localStorage.getItem(key);
+    return v !== null ? { key, value: v } : null;
   },
   async set(key, value){
     localStorage.setItem(key, value);
@@ -557,7 +637,6 @@ const storage = {
   }
 };
 
-// --- Storage with retry (fixes false "Speichern fehlgeschlagen" alerts) ---
 function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
 async function withRetry(fn, attempts=3, baseDelay=350){
   let lastErr;
@@ -609,6 +688,7 @@ function setFormStatus(status){
   $('statusBestandBtn').classList.toggle('active', status === 'bestand');
   $('statusVerkauftBtn').classList.toggle('active', status === 'verkauft');
   $('saleFields').style.display = status === 'verkauft' ? 'block' : 'none';
+  $('listedRow').style.display = status === 'bestand' ? 'flex' : 'none';
   $('formHint').textContent = status === 'verkauft'
     ? 'Gewinn = Verkaufspreis − Einkaufspreis'
     : 'Artikel wird als „im Bestand" gespeichert, bis du ihn als verkauft markierst.';
@@ -624,15 +704,16 @@ function resetForm(){
   $('purchaseDate').value = todayISO();
   $('salePrice').value = '';
   $('soldDate').value = '';
+  $('itemNote').value = '';
+  $('listedCheckbox').checked = false;
   editingId = null;
   $('editingBanner').style.display = 'none';
   $('saveBtn').textContent = 'Eintrag speichern';
   setFormStatus('bestand');
 }
-
 $('cancelEdit').addEventListener('click', resetForm);
 
-['itemName','purchasePrice','purchaseDate','salePrice','soldDate'].forEach(id => {
+['itemName','purchasePrice','purchaseDate','salePrice','soldDate','itemNote'].forEach(id => {
   $(id).addEventListener('keydown', (ev) => {
     if(ev.key === 'Enter'){ ev.preventDefault(); $('saveBtn').click(); }
   });
@@ -643,6 +724,8 @@ $('saveBtn').addEventListener('click', async () => {
   const category = $('category').value;
   const purchase = parseFloat($('purchasePrice').value);
   const purchaseDate = $('purchaseDate').value || todayISO();
+  const note = $('itemNote').value.trim();
+  const listed = $('listedCheckbox').checked;
 
   if(!name){ $('itemName').focus(); return; }
   if(isNaN(purchase)){ showToast('Bitte Einkaufspreis eintragen', 'err'); return; }
@@ -660,10 +743,10 @@ $('saveBtn').addEventListener('click', async () => {
   if(editingId){
     const idx = entries.findIndex(e => e.id === editingId);
     if(idx > -1){
-      entries[idx] = { ...entries[idx], name, category, purchase, purchaseDate, status: currentStatus, sale, soldDate, profit };
+      entries[idx] = { ...entries[idx], name, category, purchase, purchaseDate, status: currentStatus, sale, soldDate, profit, note, listed: currentStatus==='verkauft' ? entries[idx].listed : listed };
     }
   }else{
-    entries.unshift({ id: Date.now().toString(36), name, category, purchase, purchaseDate, status: currentStatus, sale, soldDate, profit });
+    entries.unshift({ id: Date.now().toString(36), name, category, purchase, purchaseDate, status: currentStatus, sale, soldDate, profit, note, listed });
   }
 
   $('saveBtn').disabled = true;
@@ -674,12 +757,34 @@ $('saveBtn').addEventListener('click', async () => {
     resetForm();
     renderBestand();
     renderList();
+    renderHome();
   }
 });
+
+// --- Home dashboard ---
+function renderHome(){
+  const sold = entries.filter(e => e.status === 'verkauft');
+  const bestandItems = entries.filter(e => e.status === 'bestand');
+  const totalProfit = sold.reduce((s,e)=>s+e.profit,0);
+  const monthKey = todayISO().slice(0,7);
+  const monthProfit = sold.filter(e => (e.soldDate||'').slice(0,7)===monthKey).reduce((s,e)=>s+e.profit,0);
+  const bestandCapital = bestandItems.reduce((s,e)=>s+e.purchase,0);
+  const notListed = bestandItems.filter(e => !e.listed).length;
+
+  const heroEl = $('homeHeroProfit');
+  heroEl.textContent = (totalProfit>=0?'':'−') + eur(Math.abs(totalProfit));
+  heroEl.className = 'hero-card-num ' + (totalProfit>=0?'pos':'neg');
+  $('homeHeroSub').textContent = sold.length + (sold.length===1?' verkaufter Artikel':' verkaufte Artikel');
+  $('homeMonthProfit').textContent = (monthProfit>=0?'':'−') + eur(Math.abs(monthProfit));
+  $('homeBestandCount').textContent = bestandItems.length + ' Artikel';
+  $('homeBestandCapital').textContent = eur(bestandCapital);
+  $('homeNotListed').textContent = notListed;
+}
 
 // --- Bestand view ---
 function getSortedFilteredBestand(){
   let list = entries.filter(e => e.status === 'bestand');
+  if(bestandOnlyUnlisted) list = list.filter(e => !e.listed);
   const q = $('bestandSearchInput').value.trim().toLowerCase();
   if(q) list = list.filter(e => e.name.toLowerCase().includes(q));
   const sort = $('bestandSortSelect').value;
@@ -691,8 +796,13 @@ function getSortedFilteredBestand(){
 }
 $('bestandSearchInput').addEventListener('input', renderBestand);
 $('bestandSortSelect').addEventListener('change', renderBestand);
+$('bestandFilterAll').addEventListener('click', () => { bestandOnlyUnlisted = false; renderBestand(); });
+$('bestandFilterUnlisted').addEventListener('click', () => { bestandOnlyUnlisted = true; renderBestand(); });
 
 function renderBestand(){
+  $('bestandFilterAll').classList.toggle('active', !bestandOnlyUnlisted);
+  $('bestandFilterUnlisted').classList.toggle('active', bestandOnlyUnlisted);
+
   const all = entries.filter(e => e.status === 'bestand');
   $('bestandCount').textContent = all.length;
   $('bestandCapital').textContent = eur(all.reduce((s,e)=>s+e.purchase,0));
@@ -702,27 +812,29 @@ function renderBestand(){
   const list = getSortedFilteredBestand();
 
   if(all.length === 0){
-    empty.textContent = 'Noch nichts im Bestand. Leg unter „Neu" einen Artikel an.';
+    empty.textContent = 'Noch nichts im Bestand.';
     empty.style.display = 'block';
     box.innerHTML = '';
     return;
   }
   if(list.length === 0){
-    empty.textContent = 'Keine Treffer für diese Suche.';
+    empty.textContent = 'Keine Treffer.';
     empty.style.display = 'block';
     box.innerHTML = '';
     return;
   }
   empty.style.display = 'none';
   box.innerHTML = list.map(e => {
-    const color = CAT_COLORS[e.category] || '#8391A0';
-    const icon = CAT_ICONS[e.category] || '🏷️';
+    const color = CAT_COLORS[e.category] || '#5B6B80';
+    const textColor = catTextColor(e.category);
     return `
       <div class="entry" data-id="${e.id}">
-        <div class="name">${icon} ${escapeHtml(e.name)}<span class="cat" style="background:${color};color:${catTextColor(e.category)}">${escapeHtml(e.category)}</span></div>
+        <div class="name">${escapeHtml(e.name)}<span class="cat" style="background:${color};color:${textColor}">${escapeHtml(e.category)}</span></div>
         <div></div>
         <div class="date">Gekauft ${formatDate(e.purchaseDate)}</div>
         <div class="breakdown">Einkauf ${eur(e.purchase)}</div>
+        ${e.note ? `<div class="note">${escapeHtml(e.note)}</div>` : ''}
+        <label class="listed-toggle"><input type="checkbox" class="listed-checkbox" data-id="${e.id}" ${e.listed?'checked':''}><span>Auf Vinted hochgeladen</span></label>
         <div class="actions">
           <button class="edit-bestand" data-id="${e.id}">Bearbeiten</button>
           <button class="sell" data-id="${e.id}">Als verkauft markieren</button>
@@ -732,6 +844,16 @@ function renderBestand(){
     `;
   }).join('');
 
+  box.querySelectorAll('.listed-checkbox').forEach(cb => {
+    cb.addEventListener('change', async () => {
+      const idx = entries.findIndex(x => x.id === cb.dataset.id);
+      if(idx > -1){
+        entries[idx].listed = cb.checked;
+        await saveEntries(true);
+        renderHome();
+      }
+    });
+  });
   box.querySelectorAll('.sell').forEach(btn => {
     btn.addEventListener('click', () => startEdit(btn.dataset.id, true));
   });
@@ -747,6 +869,7 @@ function renderBestand(){
       const ok = await saveEntries();
       if(!ok) entries = JSON.parse(prev);
       renderBestand();
+      renderHome();
     });
   });
 }
@@ -756,20 +879,15 @@ function categoriesInUse(){
   const set = new Set(entries.filter(e=>e.status==='verkauft').map(e => e.category || 'Sonstiges'));
   return Array.from(set);
 }
-
 function renderChips(){
   const cats = ['Alle', ...categoriesInUse()];
   $('categoryChips').innerHTML = cats.map(c =>
     `<button class="chip ${c===activeCategory?'active':''}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>`
   ).join('');
   $('categoryChips').querySelectorAll('.chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      activeCategory = chip.dataset.cat;
-      renderList();
-    });
+    chip.addEventListener('click', () => { activeCategory = chip.dataset.cat; renderList(); });
   });
 }
-
 function getSortedFiltered(){
   let list = entries.filter(e => e.status === 'verkauft');
   if(activeCategory !== 'Alle') list = list.filter(e => (e.category||'Sonstiges') === activeCategory);
@@ -782,7 +900,6 @@ function getSortedFiltered(){
   if(sort === 'profitAsc') list.sort((a,b)=> a.profit - b.profit);
   return list;
 }
-
 $('sortSelect').addEventListener('change', renderList);
 $('searchInput').addEventListener('input', renderList);
 
@@ -794,7 +911,7 @@ function renderList(){
   const list = getSortedFiltered();
 
   if(soldCount === 0){
-    empty.textContent = 'Noch keine Verkäufe eingetragen. Leg unter „Neu" los.';
+    empty.textContent = 'Noch keine Verkäufe eingetragen.';
     empty.style.display = 'block';
     box.innerHTML = '';
     return;
@@ -811,14 +928,15 @@ function renderList(){
     const cls = e.profit >= 0 ? 'pos' : 'neg';
     const sign = e.profit >= 0 ? '+' : '';
     const cat = e.category || 'Sonstiges';
-    const color = CAT_COLORS[cat] || '#8391A0';
-    const icon = CAT_ICONS[cat] || '🏷️';
+    const color = CAT_COLORS[cat] || '#5B6B80';
+    const textColor = catTextColor(cat);
     return `
       <div class="entry" data-id="${e.id}">
-        <div class="name">${icon} ${escapeHtml(e.name)}<span class="cat" style="background:${color};color:${catTextColor(cat)}">${escapeHtml(cat)}</span></div>
+        <div class="name">${escapeHtml(e.name)}<span class="cat" style="background:${color};color:${textColor}">${escapeHtml(cat)}</span></div>
         <div class="profit ${cls}">${sign}${eur(e.profit)}</div>
         <div class="date">${formatDate(e.soldDate)}</div>
         <div class="breakdown">Einkauf ${eur(e.purchase)} · Verkauf ${eur(e.sale)}</div>
+        ${e.note ? `<div class="note">${escapeHtml(e.note)}</div>` : ''}
         <div class="actions">
           <button class="dup-btn" data-id="${e.id}">Duplizieren</button>
           <button class="edit-btn" data-id="${e.id}">Bearbeiten</button>
@@ -838,19 +956,14 @@ function renderList(){
       const ok = await saveEntries();
       if(!ok) entries = JSON.parse(prev);
       renderList();
+      renderHome();
     });
   });
   box.querySelectorAll('.edit-btn').forEach(btn => {
-    btn.addEventListener('click', (ev) => {
-      ev.stopPropagation();
-      startEdit(btn.dataset.id, false);
-    });
+    btn.addEventListener('click', (ev) => { ev.stopPropagation(); startEdit(btn.dataset.id, false); });
   });
   box.querySelectorAll('.dup-btn').forEach(btn => {
-    btn.addEventListener('click', (ev) => {
-      ev.stopPropagation();
-      duplicateEntry(btn.dataset.id);
-    });
+    btn.addEventListener('click', (ev) => { ev.stopPropagation(); duplicateEntry(btn.dataset.id); });
   });
 }
 
@@ -864,14 +977,12 @@ function duplicateEntry(id){
   $('purchaseDate').value = todayISO();
   $('salePrice').value = '';
   $('soldDate').value = '';
+  $('itemNote').value = e.note || '';
+  $('listedCheckbox').checked = false;
   setFormStatus('bestand');
   $('editingBanner').style.display = 'none';
   $('saveBtn').textContent = 'Eintrag speichern';
-
-  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelector('nav.tabs button[data-view="add"]').classList.add('active');
-  $('view-add').classList.add('active');
+  switchTab('add');
   showToast(`„${e.name}" als Vorlage übernommen`, 'ok');
   $('purchasePrice').focus();
 }
@@ -886,6 +997,8 @@ function startEdit(id, forceSell){
   $('purchaseDate').value = e.purchaseDate || todayISO();
   $('salePrice').value = e.sale != null ? e.sale : '';
   $('soldDate').value = e.soldDate || todayISO();
+  $('itemNote').value = e.note || '';
+  $('listedCheckbox').checked = !!e.listed;
 
   const status = forceSell ? 'verkauft' : e.status;
   setFormStatus(status);
@@ -894,10 +1007,7 @@ function startEdit(id, forceSell){
   $('editingBannerText').textContent = forceSell ? 'Verkauf abschließen' : 'Eintrag wird bearbeitet';
   $('saveBtn').textContent = forceSell ? 'Als verkauft speichern' : 'Änderungen speichern';
 
-  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelector('nav.tabs button[data-view="add"]').classList.add('active');
-  $('view-add').classList.add('active');
+  switchTab('add');
   if(forceSell) $('salePrice').focus(); else $('itemName').focus();
 }
 
@@ -924,8 +1034,6 @@ function positionTooltip(tooltipEl, canvas, x, y, text){
   clearTimeout(tooltipEl._hideTimer);
   tooltipEl._hideTimer = setTimeout(() => tooltipEl.classList.remove('show'), 2200);
 }
-
-// --- Correct high-DPI canvas sizing (fixes charts growing/shifting on redraw) ---
 function sizeCanvas(canvas, cssW, cssH){
   const dpr = window.devicePixelRatio || 1;
   canvas.style.width = cssW + 'px';
@@ -939,7 +1047,6 @@ function sizeCanvas(canvas, cssW, cssH){
 
 // --- Stats view ---
 function currentMonthKey(){ return todayISO().slice(0,7); }
-
 function renderGoal(){
   $('goalInput').value = goal.monthly || '';
   const sold = entries.filter(e => e.status === 'verkauft' && (e.soldDate||'').slice(0,7) === currentMonthKey());
@@ -980,8 +1087,7 @@ function renderStats(){
   $('statMargin').textContent = margin.toFixed(1).replace('.', ',') + ' %';
   $('statBestandCapital').textContent = eur(bestandCapital);
 
-  const holdDays = sold
-    .filter(e => e.purchaseDate && e.soldDate)
+  const holdDays = sold.filter(e => e.purchaseDate && e.soldDate)
     .map(e => Math.max(0, Math.round((new Date(e.soldDate) - new Date(e.purchaseDate)) / 86400000)));
   const avgHold = holdDays.length ? Math.round(holdDays.reduce((a,b)=>a+b,0) / holdDays.length) : 0;
   $('statHoldTime').textContent = holdDays.length ? avgHold + (avgHold === 1 ? ' Tag' : ' Tage') : '–';
@@ -1014,6 +1120,35 @@ function renderStats(){
   renderTopBars();
 }
 
+function renderYearlyOverview(){
+  const sold = entries.filter(e => e.status === 'verkauft' && e.soldDate);
+  const panel = $('yearOverviewPanel');
+  if(sold.length === 0){ panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  const byYear = {};
+  sold.forEach(e => {
+    const y = e.soldDate.slice(0,4);
+    if(!byYear[y]) byYear[y] = { revenue:0, cost:0, count:0 };
+    byYear[y].revenue += e.sale; byYear[y].cost += e.purchase; byYear[y].count += 1;
+  });
+  const years = Object.keys(byYear).sort((a,b) => b.localeCompare(a));
+  const maxProfit = Math.max(...years.map(y => byYear[y].revenue - byYear[y].cost), 0.01);
+  $('yearCards').innerHTML = years.map(y => {
+    const d = byYear[y];
+    const profit = d.revenue - d.cost;
+    const margin = d.revenue ? (profit/d.revenue*100) : 0;
+    const cls = profit >= 0 ? 'pos' : 'neg';
+    const pct = Math.max(Math.abs(profit)/maxProfit*100, 4);
+    return `
+      <div class="year-card">
+        <div class="year-card-header"><span class="yr">${y}</span><span class="val ${cls}">${profit>=0?'':'−'}${eur(Math.abs(profit))}</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${profit>=0?'#4FAE82':'#E1667A'}"></div></div>
+        <div class="year-card-meta">${d.count} Artikel · Umsatz ${eur(d.revenue)} · Marge ${margin.toFixed(1).replace('.',',')} %</div>
+      </div>
+    `;
+  }).join('');
+}
+
 function renderTopBars(){
   const sold = entries.filter(e => e.status === 'verkauft');
   const top = [...sold].sort((a,b)=>b.profit-a.profit).slice(0,5).filter(e=>e.profit>0);
@@ -1036,75 +1171,35 @@ function renderCategoryAvgBars(){
   sold.forEach(e => {
     const c = e.category || 'Sonstiges';
     if(!byCat[c]) byCat[c] = {sum:0, count:0};
-    byCat[c].sum += e.profit;
-    byCat[c].count += 1;
+    byCat[c].sum += e.profit; byCat[c].count += 1;
   });
   const cats = Object.keys(byCat);
   if(cats.length === 0){ panel.style.display = 'none'; return; }
   panel.style.display = 'block';
-
   const avgs = cats.map(c => ({ cat:c, avg: byCat[c].sum / byCat[c].count, count: byCat[c].count }));
   avgs.sort((a,b) => b.avg - a.avg);
   const max = Math.max(...avgs.map(a => Math.abs(a.avg)), 0.01);
-
   $('catAvgBars').innerHTML = avgs.map(a => {
     const cls = a.avg >= 0 ? 'pos' : 'neg';
-    const color = CAT_COLORS[a.cat] || '#8391A0';
+    const color = CAT_COLORS[a.cat] || '#5B6B80';
     return `
       <div class="bar-row" data-info="${escapeHtml(a.cat)}: Ø ${eur(a.avg)} über ${a.count} Artikel">
-        <div class="label"><span>${CAT_ICONS[a.cat]||'🏷️'} ${escapeHtml(a.cat)}</span><span class="${cls}">${eur(a.avg)}</span></div>
+        <div class="label"><span>${escapeHtml(a.cat)}</span><span class="${cls}">${eur(a.avg)}</span></div>
         <div class="bar-track"><div class="bar-fill" style="width:${Math.max(Math.abs(a.avg)/max*100,4)}%;background:${color}"></div></div>
       </div>
     `;
   }).join('');
-
   $('catAvgBars').querySelectorAll('.bar-row').forEach(row => {
     row.addEventListener('click', () => showToast(row.dataset.info));
   });
 }
 
-// --- Yearly overview ---
-function renderYearlyOverview(){
-  const sold = entries.filter(e => e.status === 'verkauft' && e.soldDate);
-  const panel = $('yearOverviewPanel');
-  if(sold.length === 0){ panel.style.display = 'none'; return; }
-  panel.style.display = 'block';
-
-  const byYear = {};
-  sold.forEach(e => {
-    const y = e.soldDate.slice(0,4);
-    if(!byYear[y]) byYear[y] = { revenue:0, cost:0, count:0 };
-    byYear[y].revenue += e.sale;
-    byYear[y].cost += e.purchase;
-    byYear[y].count += 1;
-  });
-  const years = Object.keys(byYear).sort((a,b) => b.localeCompare(a));
-  const maxProfit = Math.max(...years.map(y => byYear[y].revenue - byYear[y].cost), 0.01);
-
-  $('yearCards').innerHTML = years.map(y => {
-    const d = byYear[y];
-    const profit = d.revenue - d.cost;
-    const margin = d.revenue ? (profit/d.revenue*100) : 0;
-    const cls = profit >= 0 ? 'pos' : 'neg';
-    const pct = Math.max(Math.abs(profit)/maxProfit*100, 4);
-    return `
-      <div class="year-card">
-        <div class="year-card-header"><span class="yr">${y}</span><span class="val ${cls}">${profit>=0?'':'−'}${eur(Math.abs(profit))}</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${profit>=0?'#3F7A5D':'#B5495B'}"></div></div>
-        <div class="year-card-meta">${d.count} Artikel · Umsatz ${eur(d.revenue)} · Marge ${margin.toFixed(1).replace('.',',')} %</div>
-      </div>
-    `;
-  }).join('');
-}
-
-// --- Cumulative profit chart ---
 let cumulativePts = [];
 function renderCumulativeChart(){
   const sold = entries.filter(e => e.status === 'verkauft');
   const panel = $('cumulativePanel');
   if(sold.length === 0){ panel.style.display = 'none'; return; }
   panel.style.display = 'block';
-
   const sorted = [...sold].sort((a,b)=> (a.soldDate||'').localeCompare(b.soldDate||'') || a.id.localeCompare(b.id));
   let running = 0;
   const raw = sorted.map(e => { running += e.profit; return { date:e.soldDate, v:running }; });
@@ -1125,12 +1220,9 @@ function renderCumulativeChart(){
   const plotH = cssH - padT - padB;
   const zeroY = padT + plotH - ((0 - minV) / range) * plotH;
 
-  ctx.strokeStyle = '#C7D3DE';
+  ctx.strokeStyle = '#243247';
   ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(padL, zeroY);
-  ctx.lineTo(cssW - padR, zeroY);
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(padL, zeroY); ctx.lineTo(cssW - padR, zeroY); ctx.stroke();
 
   const stepX = raw.length > 1 ? plotW / (raw.length - 1) : 0;
   const pts = raw.map((p,i) => {
@@ -1147,66 +1239,52 @@ function renderCumulativeChart(){
     ctx.lineTo(pts[pts.length-1].x, zeroY);
     ctx.closePath();
     const grad = ctx.createLinearGradient(0,padT,0,padT+plotH);
-    const endColor = values[values.length-1] >= 0 ? '63,122,93' : '181,73,91';
+    const endColor = values[values.length-1] >= 0 ? '79,174,130' : '225,102,122';
     grad.addColorStop(0, `rgba(${endColor},0.30)`);
-    grad.addColorStop(1, `rgba(${endColor},0.03)`);
+    grad.addColorStop(1, `rgba(${endColor},0.02)`);
     ctx.fillStyle = grad;
     ctx.fill();
   }
-
   ctx.beginPath();
   pts.forEach((p,i) => i===0 ? ctx.moveTo(p.x,p.y) : ctx.lineTo(p.x,p.y));
-  ctx.strokeStyle = '#13233A';
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#D9B36C';
+  ctx.lineWidth = 2.2;
   ctx.lineJoin = 'round';
   ctx.stroke();
 
   ctx.font = '10px Inter, sans-serif';
-  ctx.fillStyle = '#51677D';
+  ctx.fillStyle = '#8AA0BC';
   if(pts.length){
-    ctx.textAlign = 'left';
-    ctx.fillText(formatDate(pts[0].date), pts[0].x, cssH - 6);
-    ctx.textAlign = 'right';
-    ctx.fillText(formatDate(pts[pts.length-1].date), pts[pts.length-1].x, cssH - 6);
+    ctx.textAlign = 'left'; ctx.fillText(formatDate(pts[0].date), pts[0].x, cssH - 6);
+    ctx.textAlign = 'right'; ctx.fillText(formatDate(pts[pts.length-1].date), pts[pts.length-1].x, cssH - 6);
   }
   const last = pts[pts.length-1];
   if(last){
-    ctx.beginPath();
-    ctx.arc(last.x, last.y, 3.5, 0, Math.PI*2);
-    ctx.fillStyle = last.v >= 0 ? '#3F7A5D' : '#B5495B';
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(last.x, last.y, 3.5, 0, Math.PI*2);
+    ctx.fillStyle = last.v >= 0 ? '#4FAE82' : '#E1667A'; ctx.fill();
   }
 }
-
 $('cumulativeChart').addEventListener('click', (ev) => {
   if(cumulativePts.length === 0) return;
   const rect = ev.target.getBoundingClientRect();
   const x = ev.clientX - rect.left;
-  let nearest = cumulativePts[0];
-  let bestDist = Math.abs(nearest.x - x);
-  cumulativePts.forEach(p => {
-    const d = Math.abs(p.x - x);
-    if(d < bestDist){ bestDist = d; nearest = p; }
-  });
-  const tooltip = $('cumulativeTooltip');
+  let nearest = cumulativePts[0], bestDist = Math.abs(nearest.x - x);
+  cumulativePts.forEach(p => { const d = Math.abs(p.x - x); if(d < bestDist){ bestDist = d; nearest = p; } });
   const sign = nearest.v >= 0 ? '+' : '−';
-  positionTooltip(tooltip, ev.target, nearest.x, nearest.y, `${formatDate(nearest.date)} · ${sign}${eur(Math.abs(nearest.v))}`);
+  positionTooltip($('cumulativeTooltip'), ev.target, nearest.x, nearest.y, `${formatDate(nearest.date)} · ${sign}${eur(Math.abs(nearest.v))}`);
 });
 
-// --- Monthly bar chart ---
 let monthlyBars = [];
 function renderMonthlyBarChart(){
   const sold = entries.filter(e => e.status === 'verkauft');
   const panel = $('monthlyBarPanel');
   if(sold.length === 0){ panel.style.display = 'none'; return; }
-
   const byMonth = {};
   sold.forEach(e => {
     const m = (e.soldDate || '').slice(0,7);
     if(!m) return;
     if(!byMonth[m]) byMonth[m] = {sale:0, purchase:0};
-    byMonth[m].sale += e.sale;
-    byMonth[m].purchase += e.purchase;
+    byMonth[m].sale += e.sale; byMonth[m].purchase += e.purchase;
   });
   const months = Object.keys(byMonth).sort();
   if(months.length === 0){ panel.style.display = 'none'; return; }
@@ -1227,16 +1305,10 @@ function renderMonthlyBarChart(){
   const groupW = plotW / shown.length;
   const barW = Math.min(groupW * 0.32, 24);
 
-  ctx.strokeStyle = '#C7D3DE';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(padL, padT + plotH);
-  ctx.lineTo(cssW - padR, padT + plotH);
-  ctx.stroke();
+  ctx.strokeStyle = '#243247'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(padL, padT + plotH); ctx.lineTo(cssW - padR, padT + plotH); ctx.stroke();
 
-  ctx.font = '10px Inter, sans-serif';
-  ctx.textAlign = 'center';
-
+  ctx.font = '10px Inter, sans-serif'; ctx.textAlign = 'center';
   monthlyBars = [];
   shown.forEach((m,i) => {
     const cx = padL + groupW * i + groupW/2;
@@ -1244,124 +1316,29 @@ function renderMonthlyBarChart(){
     const purchaseH = (byMonth[m].purchase / maxV) * plotH;
     const saleX = cx - barW - 2, purchaseX = cx + 2;
     const saleY = padT + plotH - saleH, purchaseY = padT + plotH - purchaseH;
-
-    ctx.fillStyle = '#3F7A5D';
-    ctx.fillRect(saleX, saleY, barW, saleH);
-    ctx.fillStyle = '#B5495B';
-    ctx.fillRect(purchaseX, purchaseY, barW, purchaseH);
-
-    ctx.fillStyle = '#51677D';
+    ctx.fillStyle = '#4FAE82'; ctx.fillRect(saleX, saleY, barW, saleH);
+    ctx.fillStyle = '#E1667A'; ctx.fillRect(purchaseX, purchaseY, barW, purchaseH);
+    ctx.fillStyle = '#8AA0BC';
     const [y,mo] = m.split('-');
     ctx.fillText(mo + '/' + y.slice(2), cx, cssH - 8);
-
     monthlyBars.push({x:saleX, y:saleY, w:barW, h:saleH, label:'Verkauf', month:m, value:byMonth[m].sale});
     monthlyBars.push({x:purchaseX, y:purchaseY, w:barW, h:purchaseH, label:'Einkauf', month:m, value:byMonth[m].purchase});
   });
 }
-
 $('monthlyBarChart').addEventListener('click', (ev) => {
   const rect = ev.target.getBoundingClientRect();
-  const x = ev.clientX - rect.left;
-  const y = ev.clientY - rect.top;
+  const x = ev.clientX - rect.left, y = ev.clientY - rect.top;
   const hit = monthlyBars.find(b => x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h + 4);
   if(!hit) return;
-  const tooltip = $('monthlyTooltip');
   const [yr,mo] = hit.month.split('-');
-  positionTooltip(tooltip, ev.target, hit.x + hit.w/2, hit.y, `${hit.label} ${mo}/${yr.slice(2)} · ${eur(hit.value)}`);
+  positionTooltip($('monthlyTooltip'), ev.target, hit.x + hit.w/2, hit.y, `${hit.label} ${mo}/${yr.slice(2)} · ${eur(hit.value)}`);
 });
 
-// --- Donut chart ---
-let donutSegments = [];
-function renderDonutChart(){
-  const sold = entries.filter(e => e.status === 'verkauft');
-  const panel = $('donutPanel');
-  if(sold.length === 0){ panel.style.display = 'none'; return; }
-  panel.style.display = 'block';
-
-  const byCat = {};
-  sold.forEach(e => {
-    const c = e.category || 'Sonstiges';
-    byCat[c] = (byCat[c] || 0) + e.sale;
-  });
-  const cats = Object.keys(byCat);
-  const total = cats.reduce((s,c)=>s+byCat[c],0) || 1;
-
-  const canvas = $('donutChart');
-  const size = 120;
-  const ctx = sizeCanvas(canvas, size, size);
-  ctx.clearRect(0,0,size,size);
-
-  const cx = size/2, cy = size/2, rOuter = size/2 - 4, rInner = rOuter*0.58;
-  let start = -Math.PI/2;
-  donutSegments = [];
-  cats.forEach(c => {
-    const frac = byCat[c] / total;
-    const end = start + frac * Math.PI * 2;
-    ctx.beginPath();
-    ctx.moveTo(cx,cy);
-    ctx.arc(cx,cy,rOuter,start,end);
-    ctx.closePath();
-    ctx.fillStyle = CAT_COLORS[c] || '#8391A0';
-    ctx.fill();
-    donutSegments.push({cat:c, start, end, value:byCat[c], pct: frac*100});
-    start = end;
-  });
-  ctx.globalCompositeOperation = 'destination-out';
-  ctx.beginPath();
-  ctx.arc(cx,cy,rInner,0,Math.PI*2);
-  ctx.fill();
-  ctx.globalCompositeOperation = 'source-over';
-
-  $('donutLegend').innerHTML = cats
-    .sort((a,b)=>byCat[b]-byCat[a])
-    .map(c => {
-      const pct = (byCat[c]/total*100).toFixed(0);
-      return `<div class="legend-row" data-cat="${escapeHtml(c)}">
-        <span class="lbl"><span class="swatch" style="background:${CAT_COLORS[c]||'#8391A0'}"></span>${CAT_ICONS[c]||'🏷️'} ${escapeHtml(c)}</span>
-        <span>${pct}%</span>
-      </div>`;
-    }).join('');
-
-  $('donutLegend').querySelectorAll('.legend-row').forEach(row => {
-    row.addEventListener('click', () => {
-      const seg = donutSegments.find(s => s.cat === row.dataset.cat);
-      if(seg) showToast(`${seg.cat}: ${eur(seg.value)} · ${seg.pct.toFixed(0)}%`);
-    });
-  });
-}
-
-$('donutChart').addEventListener('click', (ev) => {
-  if(donutSegments.length === 0) return;
-  const rect = ev.target.getBoundingClientRect();
-  const size = 120;
-  const cx = size/2, cy = size/2;
-  const x = ev.clientX - rect.left - cx;
-  const y = ev.clientY - rect.top - cy;
-  const dist = Math.sqrt(x*x + y*y);
-  const rOuter = size/2 - 4, rInner = rOuter*0.58;
-  if(dist < rInner || dist > rOuter) return;
-  let angle = Math.atan2(y, x) + Math.PI/2;
-  if(angle < 0) angle += Math.PI*2;
-  const seg = donutSegments.find(s => {
-    let s0 = s.start + Math.PI/2, s1 = s.end + Math.PI/2;
-    if(s0 < 0) s0 += Math.PI*2;
-    if(s1 < 0) s1 += Math.PI*2;
-    if(s1 < s0) s1 += Math.PI*2;
-    let a = angle; if(a < s0) a += Math.PI*2;
-    return a >= s0 && a <= s1;
-  });
-  if(!seg) return;
-  const tooltip = $('donutTooltip');
-  positionTooltip(tooltip, ev.target, ev.clientX - rect.left, ev.clientY - rect.top, `${seg.cat}: ${eur(seg.value)} · ${seg.pct.toFixed(0)}%`);
-});
-
-// --- Sales count per month chart ---
 let salesCountBars = [];
 function renderSalesCountChart(){
   const sold = entries.filter(e => e.status === 'verkauft');
   const panel = $('salesCountPanel');
   if(sold.length === 0){ panel.style.display = 'none'; return; }
-
   const byMonth = {};
   sold.forEach(e => {
     const m = (e.soldDate || '').slice(0,7);
@@ -1387,25 +1364,17 @@ function renderSalesCountChart(){
   const groupW = plotW / shown.length;
   const barW = Math.min(groupW * 0.5, 34);
 
-  ctx.strokeStyle = '#C7D3DE';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(padL, padT + plotH);
-  ctx.lineTo(cssW - padR, padT + plotH);
-  ctx.stroke();
-
-  ctx.font = '10px Inter, sans-serif';
-  ctx.textAlign = 'center';
+  ctx.strokeStyle = '#243247'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(padL, padT + plotH); ctx.lineTo(cssW - padR, padT + plotH); ctx.stroke();
+  ctx.font = '10px Inter, sans-serif'; ctx.textAlign = 'center';
   salesCountBars = [];
   shown.forEach((m,i) => {
     const cx = padL + groupW * i + groupW/2;
     const h = (byMonth[m] / maxV) * plotH;
     const x = cx - barW/2, y = padT + plotH - h;
-    ctx.fillStyle = '#3D6690';
-    ctx.fillRect(x, y, barW, h);
-    ctx.fillStyle = '#13233A';
-    ctx.fillText(String(byMonth[m]), cx, y - 4);
-    ctx.fillStyle = '#51677D';
+    ctx.fillStyle = '#6C8CBF'; ctx.fillRect(x, y, barW, h);
+    ctx.fillStyle = '#EEF2F7'; ctx.fillText(String(byMonth[m]), cx, Math.max(y - 4, 10));
+    ctx.fillStyle = '#8AA0BC';
     const [yr,mo] = m.split('-');
     ctx.fillText(mo + '/' + yr.slice(2), cx, cssH - 8);
     salesCountBars.push({x, y, w:barW, h, month:m, value:byMonth[m]});
@@ -1420,24 +1389,20 @@ $('salesCountChart').addEventListener('click', (ev) => {
   positionTooltip($('salesCountTooltip'), ev.target, hit.x + hit.w/2, hit.y, `${mo}/${yr.slice(2)} · ${hit.value} verkauft`);
 });
 
-// --- Weekday profit analysis ---
 const WEEKDAYS = ['So','Mo','Di','Mi','Do','Fr','Sa'];
-const WEEKDAYS_ORDER = [1,2,3,4,5,6,0]; // Mo..So
+const WEEKDAYS_ORDER = [1,2,3,4,5,6,0];
 let weekdayBars = [];
 function renderWeekdayChart(){
   const sold = entries.filter(e => e.status === 'verkauft' && e.soldDate);
   const panel = $('weekdayPanel');
   if(sold.length === 0){ panel.style.display = 'none'; return; }
   panel.style.display = 'block';
-
   const byDay = {};
   sold.forEach(e => {
     const d = new Date(e.soldDate + 'T00:00:00').getDay();
     if(!byDay[d]) byDay[d] = {sum:0, count:0};
-    byDay[d].sum += e.profit;
-    byDay[d].count += 1;
+    byDay[d].sum += e.profit; byDay[d].count += 1;
   });
-
   const canvas = $('weekdayChart');
   const box = canvas.closest('.chart-box');
   const cssW = Math.max(box.clientWidth - 32, 200);
@@ -1456,15 +1421,9 @@ function renderWeekdayChart(){
   const groupW = plotW / 7;
   const barW = Math.min(groupW * 0.55, 30);
 
-  ctx.strokeStyle = '#C7D3DE';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(padL, zeroY);
-  ctx.lineTo(cssW - padR, zeroY);
-  ctx.stroke();
-
-  ctx.font = '10px Inter, sans-serif';
-  ctx.textAlign = 'center';
+  ctx.strokeStyle = '#243247'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(padL, zeroY); ctx.lineTo(cssW - padR, zeroY); ctx.stroke();
+  ctx.font = '10px Inter, sans-serif'; ctx.textAlign = 'center';
   weekdayBars = [];
   WEEKDAYS_ORDER.forEach((d,i) => {
     const v = byDay[d] ? byDay[d].sum : 0;
@@ -1472,9 +1431,9 @@ function renderWeekdayChart(){
     const h = Math.abs(v)/range * plotH;
     const x = cx - barW/2;
     const y = v >= 0 ? zeroY - h : zeroY;
-    ctx.fillStyle = v >= 0 ? '#3F7A5D' : '#B5495B';
+    ctx.fillStyle = v >= 0 ? '#4FAE82' : '#E1667A';
     ctx.fillRect(x, y, barW, Math.max(h,1));
-    ctx.fillStyle = '#51677D';
+    ctx.fillStyle = '#8AA0BC';
     ctx.fillText(WEEKDAYS[d], cx, cssH - 6);
     weekdayBars.push({x, y, w:barW, h:Math.max(h,4), day:d, value:v, count: byDay[d]?byDay[d].count:0});
   });
@@ -1487,64 +1446,107 @@ $('weekdayChart').addEventListener('click', (ev) => {
   positionTooltip($('weekdayTooltip'), ev.target, hit.x + hit.w/2, hit.y, `${WEEKDAYS[hit.day]} · ${eur(hit.value)} (${hit.count} Verkäufe)`);
 });
 
-// --- Oldest stock (Bestand) ---
 function renderOldestStock(){
   const panel = $('oldestStockPanel');
   const items = entries.filter(e => e.status === 'bestand' && e.purchaseDate);
   if(items.length === 0){ panel.style.display = 'none'; return; }
   panel.style.display = 'block';
-
   const now = new Date();
-  const withAge = items.map(e => ({
-    ...e,
-    days: Math.max(0, Math.round((now - new Date(e.purchaseDate)) / 86400000))
-  })).sort((a,b)=> b.days - a.days).slice(0,5);
+  const withAge = items.map(e => ({...e, days: Math.max(0, Math.round((now - new Date(e.purchaseDate)) / 86400000))}))
+    .sort((a,b)=> b.days - a.days).slice(0,5);
   const max = Math.max(...withAge.map(e=>e.days), 1);
-
   $('oldestStockBars').innerHTML = withAge.map(e => `
     <div class="bar-row">
       <div class="label"><span>${escapeHtml(e.name)}</span><span>${e.days} Tage</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:${Math.max(e.days/max*100,4)}%;background:${e.days>60?'#B5495B':'#C79A46'}"></div></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.max(e.days/max*100,4)}%;background:${e.days>60?'#E1667A':'#D9B36C'}"></div></div>
     </div>
   `).join('');
 }
 
-// --- CSV export ---
+let donutSegments = [];
+function renderDonutChart(){
+  const sold = entries.filter(e => e.status === 'verkauft');
+  const panel = $('donutPanel');
+  if(sold.length === 0){ panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  const byCat = {};
+  sold.forEach(e => { const c = e.category || 'Sonstiges'; byCat[c] = (byCat[c] || 0) + e.sale; });
+  const cats = Object.keys(byCat);
+  const total = cats.reduce((s,c)=>s+byCat[c],0) || 1;
+
+  const canvas = $('donutChart');
+  const size = 120;
+  const ctx = sizeCanvas(canvas, size, size);
+  ctx.clearRect(0,0,size,size);
+  const cx = size/2, cy = size/2, rOuter = size/2 - 4, rInner = rOuter*0.58;
+  let start = -Math.PI/2;
+  donutSegments = [];
+  cats.forEach(c => {
+    const frac = byCat[c] / total;
+    const end = start + frac * Math.PI * 2;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,rOuter,start,end); ctx.closePath();
+    ctx.fillStyle = CAT_COLORS[c] || '#5B6B80'; ctx.fill();
+    donutSegments.push({cat:c, start, end, value:byCat[c], pct: frac*100});
+    start = end;
+  });
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath(); ctx.arc(cx,cy,rInner,0,Math.PI*2); ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+
+  $('donutLegend').innerHTML = cats.sort((a,b)=>byCat[b]-byCat[a]).map(c => {
+    const pct = (byCat[c]/total*100).toFixed(0);
+    return `<div class="legend-row" data-cat="${escapeHtml(c)}">
+      <span class="lbl"><span class="swatch" style="background:${CAT_COLORS[c]||'#5B6B80'}"></span>${escapeHtml(c)}</span>
+      <span>${pct}%</span>
+    </div>`;
+  }).join('');
+  $('donutLegend').querySelectorAll('.legend-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const seg = donutSegments.find(s => s.cat === row.dataset.cat);
+      if(seg) showToast(`${seg.cat}: ${eur(seg.value)} · ${seg.pct.toFixed(0)}%`);
+    });
+  });
+}
+$('donutChart').addEventListener('click', (ev) => {
+  if(donutSegments.length === 0) return;
+  const rect = ev.target.getBoundingClientRect();
+  const size = 120, cx = size/2, cy = size/2;
+  const x = ev.clientX - rect.left - cx, y = ev.clientY - rect.top - cy;
+  const dist = Math.sqrt(x*x + y*y);
+  const rOuter = size/2 - 4, rInner = rOuter*0.58;
+  if(dist < rInner || dist > rOuter) return;
+  let angle = Math.atan2(y, x) + Math.PI/2;
+  if(angle < 0) angle += Math.PI*2;
+  const seg = donutSegments.find(s => {
+    let s0 = s.start + Math.PI/2, s1 = s.end + Math.PI/2;
+    if(s0 < 0) s0 += Math.PI*2; if(s1 < 0) s1 += Math.PI*2; if(s1 < s0) s1 += Math.PI*2;
+    let a = angle; if(a < s0) a += Math.PI*2;
+    return a >= s0 && a <= s1;
+  });
+  if(!seg) return;
+  positionTooltip($('donutTooltip'), ev.target, ev.clientX - rect.left, ev.clientY - rect.top, `${seg.cat}: ${eur(seg.value)} · ${seg.pct.toFixed(0)}%`);
+});
+
 $('exportBtn').addEventListener('click', () => {
   const sold = entries.filter(e => e.status === 'verkauft');
   if(sold.length === 0){ showToast('Keine Verkäufe zum Exportieren', 'err'); return; }
-  const header = ['Artikel','Kategorie','Einkaufsdatum','Verkaufsdatum','Einkauf','Verkauf','Gewinn'];
-  const rows = sold.map(e => [
-    e.name, e.category||'Sonstiges', e.purchaseDate, e.soldDate,
-    e.purchase.toFixed(2), e.sale.toFixed(2), e.profit.toFixed(2)
-  ]);
+  const header = ['Artikel','Kategorie','Einkaufsdatum','Verkaufsdatum','Einkauf','Verkauf','Gewinn','Notiz'];
+  const rows = sold.map(e => [e.name, e.category||'Sonstiges', e.purchaseDate, e.soldDate, e.purchase.toFixed(2), e.sale.toFixed(2), e.profit.toFixed(2), e.note||'']);
   const csv = [header, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(';')).join('\n');
   const blob = new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'vinted-verkaeufe.csv';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const a = document.createElement('a'); a.href = url; a.download = 'vinted-verkaeufe.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 });
 
-// --- JSON backup / restore ---
 $('exportBackupBtn').addEventListener('click', () => {
   const payload = { entries, goal, exportedAt: new Date().toISOString() };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'vinted-ledger-backup.json';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const a = document.createElement('a'); a.href = url; a.download = 'vinted-ledger-backup.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
   showToast('Backup heruntergeladen ✓', 'ok');
 });
-
 $('importBackupBtn').addEventListener('click', () => $('importFileInput').click());
 $('importFileInput').addEventListener('change', async (ev) => {
   const file = ev.target.files[0];
@@ -1559,7 +1561,7 @@ $('importFileInput').addEventListener('change', async (ev) => {
     const okG = await saveGoal(true);
     if(okE){
       showToast('Backup importiert ✓', 'ok');
-      renderBestand(); renderList(); renderStats();
+      renderBestand(); renderList(); renderStats(); renderHome();
     }
   }catch(e){
     showToast('Import fehlgeschlagen – Datei prüfen', 'err');
@@ -1573,6 +1575,7 @@ $('importFileInput').addEventListener('change', async (ev) => {
   await checkTip();
   await loadEntries();
   await loadGoal();
+  renderHome();
   renderBestand();
   renderList();
   renderStats();
@@ -1582,10 +1585,7 @@ $('importFileInput').addEventListener('change', async (ev) => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       if($('view-stats').classList.contains('active')){
-        renderCumulativeChart();
-        renderMonthlyBarChart();
-        renderSalesCountChart();
-        renderWeekdayChart();
+        renderCumulativeChart(); renderMonthlyBarChart(); renderSalesCountChart(); renderWeekdayChart();
       }
     }, 120);
   };
