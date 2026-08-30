@@ -88,6 +88,14 @@
 
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 
+  input[type="date"]::-webkit-date-and-time-value{
+    text-align:left;
+  }
+  input[type="date"]{
+    -webkit-appearance:none;
+    appearance:none;
+  }
+
   .segmented{display:flex;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:4px;background:var(--surface-3);}
   .segmented button{
     flex:1;padding:11px 6px;background:transparent;border:none;font-weight:600;font-size:0.85rem;
