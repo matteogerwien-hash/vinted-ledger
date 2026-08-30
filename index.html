@@ -92,7 +92,6 @@
   .btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
   .btn:disabled{opacity:0.6;}
   .btn.ghost{background:transparent;color:var(--ink-soft);border:1.5px solid var(--line);margin-top:10px;box-shadow:none;}
-  .btn.gold{background:var(--gold);box-shadow:0 3px 0 #8E6D2E;}
   .btn.small{width:auto;padding:8px 14px;font-size:0.78rem;margin-top:0;box-shadow:none;}
 
   .editing-banner{
@@ -273,7 +272,7 @@
       <div class="row2">
         <div>
           <label for="purchasePrice">Einkaufspreis (€)</label>
-          <input type="number" step="0.01" id="purchasePrice" placeholder="0,00">
+          <input type="number" step="0.01" min="0" id="purchasePrice" placeholder="0,00">
         </div>
         <div>
           <label for="purchaseDate">Einkaufsdatum</label>
@@ -285,7 +284,7 @@
         <div class="row2">
           <div>
             <label for="salePrice">Verkaufspreis (€)</label>
-            <input type="number" step="0.01" id="salePrice" placeholder="0,00">
+            <input type="number" step="0.01" min="0" id="salePrice" placeholder="0,00">
           </div>
           <div>
             <label for="soldDate">Verkaufsdatum</label>
@@ -358,7 +357,7 @@
     <div class="goal-card">
       <h3 style="margin:0 0 12px;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-soft);">Monatsziel</h3>
       <div class="goal-row">
-        <input type="number" step="1" id="goalInput" placeholder="z. B. 200">
+        <input type="number" step="1" min="0" id="goalInput" placeholder="z. B. 200">
         <button class="btn small" id="goalSaveBtn">Speichern</button>
       </div>
       <div class="goal-progress-track"><div class="goal-progress-fill" id="goalFill" style="width:0%;"></div></div>
@@ -468,6 +467,8 @@ const CAT_ICONS = {
   'Jeans':'👖','Jacken':'🧥','Shirts/Tops':'👕',
   'Schuhe':'👟','Accessoires':'👜','Sonstiges':'🏷️'
 };
+const CAT_DARK_TEXT = new Set(['Schuhe','Accessoires','Sonstiges']); // light backgrounds need dark text for contrast
+function catTextColor(cat){ return CAT_DARK_TEXT.has(cat) ? '#13233A' : '#F8FAFC'; }
 
 const $ = (id) => document.getElementById(id);
 const eur = (n) => n.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
@@ -616,6 +617,12 @@ function resetForm(){
 
 $('cancelEdit').addEventListener('click', resetForm);
 
+['itemName','purchasePrice','purchaseDate','salePrice','soldDate'].forEach(id => {
+  $(id).addEventListener('keydown', (ev) => {
+    if(ev.key === 'Enter'){ ev.preventDefault(); $('saveBtn').click(); }
+  });
+});
+
 $('saveBtn').addEventListener('click', async () => {
   const name = $('itemName').value.trim();
   const category = $('category').value;
@@ -697,7 +704,7 @@ function renderBestand(){
     const icon = CAT_ICONS[e.category] || '🏷️';
     return `
       <div class="entry" data-id="${e.id}">
-        <div class="name">${icon} ${escapeHtml(e.name)}<span class="cat" style="background:${color}">${escapeHtml(e.category)}</span></div>
+        <div class="name">${icon} ${escapeHtml(e.name)}<span class="cat" style="background:${color};color:${catTextColor(e.category)}">${escapeHtml(e.category)}</span></div>
         <div></div>
         <div class="date">Gekauft ${formatDate(e.purchaseDate)}</div>
         <div class="breakdown">Einkauf ${eur(e.purchase)}</div>
@@ -793,7 +800,7 @@ function renderList(){
     const icon = CAT_ICONS[cat] || '🏷️';
     return `
       <div class="entry" data-id="${e.id}">
-        <div class="name">${icon} ${escapeHtml(e.name)}<span class="cat" style="background:${color}">${escapeHtml(cat)}</span></div>
+        <div class="name">${icon} ${escapeHtml(e.name)}<span class="cat" style="background:${color};color:${catTextColor(cat)}">${escapeHtml(cat)}</span></div>
         <div class="profit ${cls}">${sign}${eur(e.profit)}</div>
         <div class="date">${formatDate(e.soldDate)}</div>
         <div class="breakdown">Einkauf ${eur(e.purchase)} · Verkauf ${eur(e.sale)}</div>
