@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#EEF2F6">
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -191,6 +194,13 @@
   .bar-track{height:9px;background:var(--paper-2);border-radius:4px;overflow:hidden;}
   .bar-fill{height:100%;background:var(--gold);border-radius:4px;transition:width .3s ease;}
 
+  /* Year overview */
+  .year-card{background:var(--paper-2);border:1.5px solid var(--ink);border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);}
+  .year-card-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+  .year-card-header .yr{font-family:'Fraunces',serif;font-weight:700;font-size:1.15rem;}
+  .year-card-header .val{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1rem;}
+  .year-card-meta{font-size:0.72rem;color:var(--ink-soft);margin-top:8px;font-family:'JetBrains Mono',monospace;}
+
   /* Goal panel */
   .goal-card{background:var(--paper-2);border:1.5px solid var(--ink);border-radius:10px;padding:18px;margin-bottom:22px;box-shadow:var(--shadow);}
   .goal-card .goal-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;}
@@ -366,6 +376,11 @@
         <span id="goalPctLabel">0 %</span>
       </div>
       <div id="goalBadge" style="display:none;text-align:center;font-weight:700;font-size:0.85rem;margin-top:10px;color:var(--green);">🎉 Monatsziel erreicht!</div>
+    </div>
+
+    <div class="panel barlist" id="yearOverviewPanel" style="display:none;">
+      <h3>Jahresübersicht</h3>
+      <div id="yearCards"></div>
     </div>
 
     <div class="panel" id="cumulativePanel" style="display:none;">
@@ -988,6 +1003,7 @@ function renderStats(){
   }
 
   renderGoal();
+  renderYearlyOverview();
   renderCumulativeChart();
   renderMonthlyBarChart();
   renderSalesCountChart();
@@ -1045,6 +1061,40 @@ function renderCategoryAvgBars(){
   $('catAvgBars').querySelectorAll('.bar-row').forEach(row => {
     row.addEventListener('click', () => showToast(row.dataset.info));
   });
+}
+
+// --- Yearly overview ---
+function renderYearlyOverview(){
+  const sold = entries.filter(e => e.status === 'verkauft' && e.soldDate);
+  const panel = $('yearOverviewPanel');
+  if(sold.length === 0){ panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+
+  const byYear = {};
+  sold.forEach(e => {
+    const y = e.soldDate.slice(0,4);
+    if(!byYear[y]) byYear[y] = { revenue:0, cost:0, count:0 };
+    byYear[y].revenue += e.sale;
+    byYear[y].cost += e.purchase;
+    byYear[y].count += 1;
+  });
+  const years = Object.keys(byYear).sort((a,b) => b.localeCompare(a));
+  const maxProfit = Math.max(...years.map(y => byYear[y].revenue - byYear[y].cost), 0.01);
+
+  $('yearCards').innerHTML = years.map(y => {
+    const d = byYear[y];
+    const profit = d.revenue - d.cost;
+    const margin = d.revenue ? (profit/d.revenue*100) : 0;
+    const cls = profit >= 0 ? 'pos' : 'neg';
+    const pct = Math.max(Math.abs(profit)/maxProfit*100, 4);
+    return `
+      <div class="year-card">
+        <div class="year-card-header"><span class="yr">${y}</span><span class="val ${cls}">${profit>=0?'':'−'}${eur(Math.abs(profit))}</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${profit>=0?'#3F7A5D':'#B5495B'}"></div></div>
+        <div class="year-card-meta">${d.count} Artikel · Umsatz ${eur(d.revenue)} · Marge ${margin.toFixed(1).replace('.',',')} %</div>
+      </div>
+    `;
+  }).join('');
 }
 
 // --- Cumulative profit chart ---
