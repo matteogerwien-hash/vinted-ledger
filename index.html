@@ -327,9 +327,10 @@
 
       <label for="category">Kategorie</label>
       <select id="category">
-        <option value="Jeans">Jeans</option>
+        <option value="Hosen">Hosen</option>
+        <option value="T-Shirts">T-Shirts</option>
+        <option value="Pullover">Pullover</option>
         <option value="Jacken">Jacken</option>
-        <option value="Shirts/Tops">Shirts / Tops</option>
         <option value="Schuhe">Schuhe</option>
         <option value="Accessoires">Accessoires</option>
         <option value="Sonstiges">Sonstiges</option>
@@ -567,21 +568,25 @@ let activeCategory = 'Alle';
 let bestandOnlyUnlisted = false;
 
 const CAT_COLORS = {
-  'Jacken':'#0F2138','Jeans':'#1F3B5C','Shirts/Tops':'#35577F',
-  'Schuhe':'#4C74A0','Accessoires':'#6B93BC','Sonstiges':'#8FB0D2'
+  'Jacken':'#0B1B2E','Hosen':'#173151','Pullover':'#254A73',
+  'T-Shirts':'#3B6491','Schuhe':'#6690B5','Accessoires':'#7A9FC0','Sonstiges':'#A3C0DA'
 };
-const CAT_DARK_TEXT = new Set(['Accessoires','Sonstiges']); // computed via WCAG contrast check
+const CAT_DARK_TEXT = new Set(['Schuhe','Accessoires','Sonstiges']); // computed via WCAG contrast check
 function catTextColor(cat){ return CAT_DARK_TEXT.has(cat) ? '#12181F' : '#FFFFFF'; }
+const CAT_MIGRATE = { 'Jeans':'Hosen', 'Shirts/Tops':'T-Shirts' }; // map old category names from earlier app versions
 
 const $ = (id) => document.getElementById(id);
 const eur = (n) => n.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+const eurCompact = (n) => Math.round(n).toLocaleString('de-DE') + ' €';
 const todayISO = () => new Date().toISOString().slice(0,10);
 
 function normalize(e){
+  let category = e.category || 'Sonstiges';
+  if(CAT_MIGRATE[category]) category = CAT_MIGRATE[category];
   return {
     id: e.id,
     name: e.name,
-    category: e.category || 'Sonstiges',
+    category: category,
     purchase: e.purchase || 0,
     purchaseDate: e.purchaseDate || e.date || todayISO(),
     status: e.status || (e.sale != null ? 'verkauft' : 'bestand'),
@@ -1243,7 +1248,7 @@ function renderCumulativeChart(){
     ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(cssW - padR + 4, y); ctx.stroke();
     ctx.fillStyle = '#8993A1';
-    ctx.fillText(Math.round(v) + '€', cssW - padR + 8, y + 3);
+    ctx.fillText(eurCompact(v), cssW - padR + 8, y + 3);
   }
   // zero baseline emphasized
   ctx.strokeStyle = '#D5D9E0'; ctx.lineWidth = 1.2;
@@ -1374,8 +1379,8 @@ function renderMonthlyBarChart(){
 
     ctx.font = '9px JetBrains Mono, monospace';
     ctx.fillStyle = '#12181F';
-    if(saleH > 14) ctx.fillText(Math.round(byMonth[m].sale), saleX+barW/2, saleY-5);
-    if(purchaseH > 14) ctx.fillText(Math.round(byMonth[m].purchase), purchaseX+barW/2, purchaseY-5);
+    if(saleH > 14) ctx.fillText(eurCompact(byMonth[m].sale), saleX+barW/2, saleY-5);
+    if(purchaseH > 14) ctx.fillText(eurCompact(byMonth[m].purchase), purchaseX+barW/2, purchaseY-5);
 
     ctx.font = '10px Inter, sans-serif';
     ctx.fillStyle = '#647080';
@@ -1556,11 +1561,11 @@ function renderDonutChart(){
   // fill the hole with the card surface color, then add a center total label
   ctx.fillStyle = '#F6F7F9';
   ctx.beginPath(); ctx.arc(cx,cy,rInner,0,Math.PI*2); ctx.fill();
-  ctx.font = '700 12px JetBrains Mono, monospace';
+  ctx.font = '700 11px JetBrains Mono, monospace';
   ctx.fillStyle = '#12181F';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  const totalLabel = total >= 1000 ? Math.round(total/1000) + 'k€' : Math.round(total) + '€';
+  const totalLabel = eurCompact(total);
   ctx.fillText(totalLabel, cx, cy - 4);
   ctx.font = '8px Inter, sans-serif';
   ctx.fillStyle = '#8993A1';
