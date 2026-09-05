@@ -76,7 +76,7 @@
   .bottom-nav button:focus-visible{outline:2px solid var(--navy);outline-offset:-2px;}
 
   /* Cards */
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:0 1px 2px rgba(18,24,31,0.03), 0 4px 12px rgba(18,24,31,0.04);}
   label{display:block;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-soft);margin:14px 0 6px;}
   label:first-of-type{margin-top:0;}
   input,select,textarea{
@@ -104,8 +104,8 @@
   }
   .segmented button.active{background:var(--navy);color:var(--bg);font-weight:700;}
 
-  .btn{width:100%;margin-top:20px;padding:14px;background:var(--navy);color:var(--bg);border:none;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;letter-spacing:0.01em;}
-  .btn:active{opacity:0.85;}
+  .btn{width:100%;margin-top:20px;padding:14px;background:var(--navy);color:var(--bg);border:none;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;letter-spacing:0.01em;transition:transform .1s ease, opacity .1s ease;}
+  .btn:active{opacity:0.85;transform:scale(0.98);}
   .btn:focus-visible{outline:2px solid var(--navy);outline-offset:2px;}
   .btn:disabled{opacity:0.5;}
   .btn.ghost{background:transparent;color:var(--text-soft);border:1px solid var(--border);margin-top:10px;}
@@ -137,7 +137,7 @@
   .chip.active{background:var(--navy);border-color:var(--navy);color:var(--bg);}
 
   /* entries */
-  .entry{position:relative;padding:14px 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:2px;transition:background .15s ease;}
+  .entry{position:relative;padding:14px 0 14px 12px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:2px;transition:background .15s ease;}
   .entry:last-child{border-bottom:none;}
   .entry:active{background:var(--surface-2);}
   .entry .name{font-weight:600;font-size:0.95rem;}
@@ -172,17 +172,21 @@
   .hero-card-sub{font-size:0.78rem;color:var(--text-soft);margin-top:6px;}
 
   .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;}
-  .stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;}
+  .stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:0 1px 2px rgba(18,24,31,0.03), 0 4px 12px rgba(18,24,31,0.04);}
   .stat-tile-label{font-size:0.68rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
   .stat-tile-val{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.15rem;}
   .stat-tile-val.warn{color:var(--navy);}
+  .stat-tile-trend{font-size:0.7rem;font-weight:600;margin-top:5px;}
+  .stat-tile-trend.pos{color:var(--green);}
+  .stat-tile-trend.neg{color:var(--red);}
 
   .quick-actions{display:flex;flex-direction:column;gap:10px;}
-  .quick-btn{padding:14px;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer;border:none;background:var(--navy);color:var(--bg);}
+  .quick-btn{padding:14px;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer;border:none;background:var(--navy);color:var(--bg);transition:transform .1s ease, opacity .1s ease;}
+  .quick-btn:active{transform:scale(0.98);opacity:0.9;}
   .quick-btn.ghost{background:var(--surface);color:var(--text);border:1px solid var(--border);}
 
   /* Hero receipt on Stats tab */
-  .receipt{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px 22px;margin-bottom:22px;}
+  .receipt{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px 22px;margin-bottom:22px;box-shadow:0 1px 2px rgba(18,24,31,0.03), 0 4px 12px rgba(18,24,31,0.04);}
   .receipt .sub{text-align:center;font-size:0.72rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px;}
   .hero-num{font-family:'Fraunces',serif;font-weight:700;font-size:2.5rem;text-align:center;margin:0 0 2px;line-height:1.05;}
   .hero-num.pos{color:var(--green);}
@@ -197,7 +201,7 @@
   .panel{margin-bottom:22px;}
   .panel h3{font-size:0.74rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-soft);margin:0 0 4px;font-weight:700;}
   .panel .tap-hint{font-size:0.68rem;color:var(--text-faint);margin:0 0 10px;font-style:italic;}
-  .chart-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;}
+  .chart-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;box-shadow:0 1px 2px rgba(18,24,31,0.03), 0 4px 12px rgba(18,24,31,0.04);}
   .chart-box canvas{display:block;cursor:pointer;}
 
   .chart-tooltip{
@@ -223,13 +227,13 @@
   .bar-track{height:8px;background:var(--surface-3);border-radius:4px;overflow:hidden;}
   .bar-fill{height:100%;background:var(--navy);border-radius:4px;transition:width .3s ease;}
 
-  .year-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px 17px;margin-bottom:10px;}
+  .year-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px 17px;margin-bottom:10px;box-shadow:0 1px 2px rgba(18,24,31,0.03), 0 4px 12px rgba(18,24,31,0.04);}
   .year-card-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
   .year-card-header .yr{font-family:'Inter',sans-serif;font-weight:800;font-size:1.05rem;}
   .year-card-header .val{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1rem;}
   .year-card-meta{font-size:0.72rem;color:var(--text-faint);margin-top:8px;font-family:'JetBrains Mono',monospace;}
 
-  .goal-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:22px;}
+  .goal-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:22px;box-shadow:0 1px 2px rgba(18,24,31,0.03), 0 4px 12px rgba(18,24,31,0.04);}
   .goal-card h3{margin:0 0 12px;font-size:0.74rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-soft);}
   .goal-card .goal-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;}
   .goal-card .goal-row input{flex:1;}
@@ -288,6 +292,7 @@
       <div class="stat-tile">
         <div class="stat-tile-label">Diesen Monat</div>
         <div class="stat-tile-val" id="homeMonthProfit">0,00 €</div>
+        <div class="stat-tile-trend" id="homeMonthTrend" style="display:none;"></div>
       </div>
       <div class="stat-tile">
         <div class="stat-tile-label">Im Bestand</div>
@@ -784,7 +789,11 @@ function renderHome(){
   const bestandItems = entries.filter(e => e.status === 'bestand');
   const totalProfit = sold.reduce((s,e)=>s+e.profit,0);
   const monthKey = todayISO().slice(0,7);
+  const now = new Date();
+  const prevMonthDate = new Date(now.getFullYear(), now.getMonth()-1, 1);
+  const prevMonthKey = prevMonthDate.toISOString().slice(0,7);
   const monthProfit = sold.filter(e => (e.soldDate||'').slice(0,7)===monthKey).reduce((s,e)=>s+e.profit,0);
+  const prevMonthProfit = sold.filter(e => (e.soldDate||'').slice(0,7)===prevMonthKey).reduce((s,e)=>s+e.profit,0);
   const bestandCapital = bestandItems.reduce((s,e)=>s+e.purchase,0);
   const notListed = bestandItems.filter(e => !e.listed).length;
 
@@ -793,6 +802,18 @@ function renderHome(){
   heroEl.className = 'hero-card-num ' + (totalProfit>=0?'pos':'neg');
   $('homeHeroSub').textContent = sold.length + (sold.length===1?' verkaufter Artikel':' verkaufte Artikel');
   $('homeMonthProfit').textContent = (monthProfit>=0?'':'−') + eur(Math.abs(monthProfit));
+
+  const trendEl = $('homeMonthTrend');
+  if(prevMonthProfit !== 0){
+    const diff = monthProfit - prevMonthProfit;
+    const pct = Math.round((diff/Math.abs(prevMonthProfit))*100);
+    trendEl.textContent = (diff>=0?'↑ +':'↓ ') + Math.abs(pct) + '% vs. Vormonat';
+    trendEl.className = 'stat-tile-trend ' + (diff>=0?'pos':'neg');
+    trendEl.style.display = 'block';
+  }else{
+    trendEl.style.display = 'none';
+  }
+
   $('homeBestandCount').textContent = bestandItems.length + ' Artikel';
   $('homeBestandCapital').textContent = eur(bestandCapital);
   $('homeNotListed').textContent = notListed;
@@ -845,7 +866,7 @@ function renderBestand(){
     const color = CAT_COLORS[e.category] || '#8FB0D2';
     const textColor = catTextColor(e.category);
     return `
-      <div class="entry" data-id="${e.id}">
+      <div class="entry" data-id="${e.id}" style="border-left:3px solid ${color};">
         <div class="name">${escapeHtml(e.name)}<span class="cat" style="background:${color};color:${textColor}">${escapeHtml(e.category)}</span></div>
         <div></div>
         <div class="date">Gekauft ${formatDate(e.purchaseDate)}</div>
@@ -948,7 +969,7 @@ function renderList(){
     const color = CAT_COLORS[cat] || '#8FB0D2';
     const textColor = catTextColor(cat);
     return `
-      <div class="entry" data-id="${e.id}">
+      <div class="entry" data-id="${e.id}" style="border-left:3px solid ${color};">
         <div class="name">${escapeHtml(e.name)}<span class="cat" style="background:${color};color:${textColor}">${escapeHtml(cat)}</span></div>
         <div class="profit ${cls}">${sign}${eur(e.profit)}</div>
         <div class="date">${formatDate(e.soldDate)}</div>
