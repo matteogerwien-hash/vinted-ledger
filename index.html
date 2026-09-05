@@ -2,12 +2,12 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Vinted-Ledger</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0B1220">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
@@ -15,17 +15,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0B1220;
-    --surface:#121B2C;
-    --surface-2:#1B2740;
-    --surface-3:#0E1626;
-    --border:#243247;
-    --text:#EEF2F7;
-    --text-soft:#8AA0BC;
-    --text-faint:#6E85A0;
-    --gold:#D9B36C;
-    --green:#4FAE82;
-    --red:#E1667A;
+    --bg:#FFFFFF;
+    --surface:#F6F7F9;
+    --surface-2:#EDEFF3;
+    --surface-3:#FAFBFC;
+    --border:#E2E5EA;
+    --text:#12181F;
+    --text-soft:#5B6672;
+    --text-faint:#647080;
+    --navy:#132A45;
+    --navy-light:#35577F;
+    --green:#1F7A4D;
+    --red:#C7415A;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -40,7 +41,7 @@
   .wrap{max-width:540px;margin:0 auto;padding:0 max(18px, env(safe-area-inset-right)) 0 max(18px, env(safe-area-inset-left));}
 
   header{padding:22px 0 4px;display:flex;align-items:center;gap:10px;}
-  header .logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(155deg,#1B3A5C,#0B1220);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  header .logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(155deg,#1B3A5C,#0F2138);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   header .logo svg{width:18px;height:18px;}
   header h1{font-family:'Inter',sans-serif;font-weight:800;font-size:1.15rem;margin:0;letter-spacing:-0.01em;}
   header p{font-size:0.68rem;color:var(--text-faint);margin:1px 0 0;text-transform:uppercase;letter-spacing:0.1em;}
@@ -59,7 +60,7 @@
   /* Bottom nav (native app feel) */
   .bottom-nav{
     position:fixed;left:0;right:0;bottom:0;z-index:50;
-    display:flex;background:rgba(18,27,44,0.92);backdrop-filter:blur(14px);
+    display:flex;background:rgba(255,255,255,0.92);backdrop-filter:blur(14px);
     border-top:1px solid var(--border);
     padding-bottom:env(safe-area-inset-bottom, 0px);
     padding-left:env(safe-area-inset-left, 0px);
@@ -71,8 +72,8 @@
     font-family:'Inter',sans-serif;font-size:0.62rem;font-weight:600;cursor:pointer;
   }
   .bottom-nav button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-  .bottom-nav button.active{color:var(--gold);}
-  .bottom-nav button:focus-visible{outline:2px solid var(--gold);outline-offset:-2px;}
+  .bottom-nav button.active{color:var(--navy);}
+  .bottom-nav button:focus-visible{outline:2px solid var(--navy);outline-offset:-2px;}
 
   /* Cards */
   .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px;}
@@ -83,7 +84,7 @@
     border:1px solid var(--border);border-radius:10px;background:var(--surface-3);color:var(--text);
   }
   input[type="number"]{font-family:'JetBrains Mono',monospace;}
-  input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:0;border-color:var(--gold);}
+  input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--navy);outline-offset:0;border-color:var(--navy);}
   ::placeholder{color:var(--text-faint);}
 
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -101,25 +102,25 @@
     flex:1;padding:11px 6px;background:transparent;border:none;font-weight:600;font-size:0.85rem;
     color:var(--text-soft);cursor:pointer;
   }
-  .segmented button.active{background:var(--gold);color:var(--bg);font-weight:700;}
+  .segmented button.active{background:var(--navy);color:var(--bg);font-weight:700;}
 
-  .btn{width:100%;margin-top:20px;padding:14px;background:var(--gold);color:var(--bg);border:none;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;letter-spacing:0.01em;}
+  .btn{width:100%;margin-top:20px;padding:14px;background:var(--navy);color:var(--bg);border:none;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;letter-spacing:0.01em;}
   .btn:active{opacity:0.85;}
-  .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+  .btn:focus-visible{outline:2px solid var(--navy);outline-offset:2px;}
   .btn:disabled{opacity:0.5;}
   .btn.ghost{background:transparent;color:var(--text-soft);border:1px solid var(--border);margin-top:10px;}
   .btn.small{width:auto;padding:9px 16px;font-size:0.8rem;margin-top:0;}
 
   .check-row{display:flex;align-items:center;gap:9px;margin:16px 0 4px;}
-  .check-row input[type="checkbox"]{width:auto;accent-color:var(--gold);width:18px;height:18px;}
+  .check-row input[type="checkbox"]{width:auto;accent-color:var(--navy);width:18px;height:18px;}
   .check-row span{font-size:0.85rem;color:var(--text-soft);}
 
   .editing-banner{
     display:flex;justify-content:space-between;align-items:center;
-    background:var(--surface-2);border:1px solid var(--gold);border-radius:10px;
+    background:var(--surface-2);border:1px solid var(--navy);border-radius:10px;
     padding:10px 14px;margin-bottom:14px;font-size:0.82rem;font-weight:600;color:var(--text);
   }
-  .editing-banner button{background:none;border:none;text-decoration:underline;font-size:0.78rem;cursor:pointer;color:var(--gold);}
+  .editing-banner button{background:none;border:none;text-decoration:underline;font-size:0.78rem;cursor:pointer;color:var(--navy);}
 
   .hint{font-size:0.76rem;color:var(--text-faint);margin-top:8px;}
 
@@ -133,7 +134,7 @@
     background:var(--surface);color:var(--text-soft);cursor:pointer;font-weight:600;
     min-height:22px;
   }
-  .chip.active{background:var(--gold);border-color:var(--gold);color:var(--bg);}
+  .chip.active{background:var(--navy);border-color:var(--navy);color:var(--bg);}
 
   /* entries */
   .entry{position:relative;padding:14px 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:2px;transition:background .15s ease;}
@@ -151,17 +152,17 @@
   .entry .breakdown{grid-column:1/-1;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-faint);margin-top:4px;}
   .entry .note{grid-column:1/-1;font-size:0.76rem;color:var(--text-soft);margin-top:4px;font-style:italic;}
   .entry .listed-toggle{grid-column:1/-1;display:flex;align-items:center;gap:9px;margin-top:8px;padding:6px 0;}
-  .entry .listed-toggle input{width:auto;accent-color:var(--gold);width:19px;height:19px;}
+  .entry .listed-toggle input{width:auto;accent-color:var(--navy);width:19px;height:19px;}
   .entry .listed-toggle span{font-size:0.74rem;color:var(--text-soft);}
   .entry .actions{grid-column:1/-1;justify-self:end;display:flex;gap:8px;margin-top:8px;}
   .entry .actions button{font-size:0.72rem;color:var(--text-faint);background:none;border:none;text-decoration:underline;cursor:pointer;padding:6px 6px;}
-  .entry .actions button.sell{color:var(--gold);font-weight:700;text-decoration:none;}
+  .entry .actions button.sell{color:var(--navy);font-weight:700;text-decoration:none;}
 
   .empty{text-align:center;padding:44px 20px;color:var(--text-faint);font-size:0.88rem;}
 
   /* Home dashboard */
   .hero-card{
-    background:radial-gradient(ellipse at top, rgba(217,179,108,0.12), transparent 60%), var(--surface);
+    background:radial-gradient(ellipse at top, rgba(19,42,69,0.06), transparent 60%), var(--surface);
     border:1px solid var(--border);border-radius:20px;padding:30px 20px;text-align:center;margin-bottom:16px;
   }
   .hero-card-label{font-size:0.72rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;}
@@ -174,10 +175,10 @@
   .stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;}
   .stat-tile-label{font-size:0.68rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
   .stat-tile-val{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.15rem;}
-  .stat-tile-val.warn{color:var(--gold);}
+  .stat-tile-val.warn{color:var(--navy);}
 
   .quick-actions{display:flex;flex-direction:column;gap:10px;}
-  .quick-btn{padding:14px;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer;border:none;background:var(--gold);color:var(--bg);}
+  .quick-btn{padding:14px;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer;border:none;background:var(--navy);color:var(--bg);}
   .quick-btn.ghost{background:var(--surface);color:var(--text);border:1px solid var(--border);}
 
   /* Hero receipt on Stats tab */
@@ -200,12 +201,12 @@
   .chart-box canvas{display:block;cursor:pointer;}
 
   .chart-tooltip{
-    position:absolute;pointer-events:none;background:var(--gold);color:var(--bg);
+    position:absolute;pointer-events:none;background:var(--navy);color:var(--bg);
     font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:700;padding:6px 9px;border-radius:6px;
     white-space:nowrap;opacity:0;transform:translate(-50%,-8px);transition:opacity .12s ease;z-index:10;
   }
   .chart-tooltip.show{opacity:1;}
-  .chart-tooltip::after{content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--gold);}
+  .chart-tooltip::after{content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--navy);}
 
   .legend-inline{display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:0.72rem;color:var(--text-soft);}
   .legend-inline span{display:flex;align-items:center;gap:5px;}
@@ -220,7 +221,7 @@
   .bar-row{margin-bottom:10px;cursor:pointer;}
   .bar-row .label{display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:4px;color:var(--text-soft);}
   .bar-track{height:8px;background:var(--surface-3);border-radius:4px;overflow:hidden;}
-  .bar-fill{height:100%;background:var(--gold);border-radius:4px;transition:width .3s ease;}
+  .bar-fill{height:100%;background:var(--navy);border-radius:4px;transition:width .3s ease;}
 
   .year-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px 17px;margin-bottom:10px;}
   .year-card-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
@@ -233,7 +234,7 @@
   .goal-card .goal-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;}
   .goal-card .goal-row input{flex:1;}
   .goal-progress-track{height:12px;background:var(--surface-3);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:6px;}
-  .goal-progress-fill{height:100%;background:var(--gold);border-radius:8px 0 0 8px;transition:width .4s ease;}
+  .goal-progress-fill{height:100%;background:var(--navy);border-radius:8px 0 0 8px;transition:width .4s ease;}
   .goal-progress-fill.reached{background:var(--green);}
   .goal-meta{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-soft);font-family:'JetBrains Mono',monospace;}
   .goal-badge{display:none;text-align:center;font-weight:700;font-size:0.85rem;margin-top:10px;color:var(--green);}
@@ -264,7 +265,7 @@
 <div class="wrap">
 
   <header>
-    <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#D9B36C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M3 8v8l9 4 9-4V8"/></svg></div>
+    <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#F6F7F9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M3 8v8l9 4 9-4V8"/></svg></div>
     <div>
       <h1>Vinted-Ledger</h1>
       <p>Bestand · Verkauf · Gewinn</p>
@@ -466,8 +467,8 @@
         <canvas id="monthlyBarChart"></canvas>
         <div class="chart-tooltip" id="monthlyTooltip"></div>
         <div class="legend-inline">
-          <span><span class="swatch" style="background:#4FAE82"></span> Verkauf</span>
-          <span><span class="swatch" style="background:#E1667A"></span> Einkauf</span>
+          <span><span class="swatch" style="background:#1F7A4D"></span> Verkauf</span>
+          <span><span class="swatch" style="background:#C7415A"></span> Einkauf</span>
         </div>
       </div>
     </div>
@@ -566,11 +567,11 @@ let activeCategory = 'Alle';
 let bestandOnlyUnlisted = false;
 
 const CAT_COLORS = {
-  'Jeans':'#3E6FB0','Jacken':'#24344F','Shirts/Tops':'#6C8CBF',
-  'Schuhe':'#C98A4B','Accessoires':'#B08D3E','Sonstiges':'#5B6B80'
+  'Jacken':'#0F2138','Jeans':'#1F3B5C','Shirts/Tops':'#35577F',
+  'Schuhe':'#4C74A0','Accessoires':'#6B93BC','Sonstiges':'#8FB0D2'
 };
-const CAT_DARK_TEXT = new Set(['Shirts/Tops','Schuhe','Accessoires']); // computed via WCAG contrast check
-function catTextColor(cat){ return CAT_DARK_TEXT.has(cat) ? '#0B1220' : '#EEF2F7'; }
+const CAT_DARK_TEXT = new Set(['Accessoires','Sonstiges']); // computed via WCAG contrast check
+function catTextColor(cat){ return CAT_DARK_TEXT.has(cat) ? '#12181F' : '#FFFFFF'; }
 
 const $ = (id) => document.getElementById(id);
 const eur = (n) => n.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
@@ -836,7 +837,7 @@ function renderBestand(){
   }
   empty.style.display = 'none';
   box.innerHTML = list.map(e => {
-    const color = CAT_COLORS[e.category] || '#5B6B80';
+    const color = CAT_COLORS[e.category] || '#8FB0D2';
     const textColor = catTextColor(e.category);
     return `
       <div class="entry" data-id="${e.id}">
@@ -939,7 +940,7 @@ function renderList(){
     const cls = e.profit >= 0 ? 'pos' : 'neg';
     const sign = e.profit >= 0 ? '+' : '';
     const cat = e.category || 'Sonstiges';
-    const color = CAT_COLORS[cat] || '#5B6B80';
+    const color = CAT_COLORS[cat] || '#8FB0D2';
     const textColor = catTextColor(cat);
     return `
       <div class="entry" data-id="${e.id}">
@@ -1153,7 +1154,7 @@ function renderYearlyOverview(){
     return `
       <div class="year-card">
         <div class="year-card-header"><span class="yr">${y}</span><span class="val ${cls}">${profit>=0?'':'−'}${eur(Math.abs(profit))}</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${profit>=0?'#4FAE82':'#E1667A'}"></div></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${profit>=0?'#1F7A4D':'#C7415A'}"></div></div>
         <div class="year-card-meta">${d.count} Artikel · Umsatz ${eur(d.revenue)} · Marge ${margin.toFixed(1).replace('.',',')} %</div>
       </div>
     `;
@@ -1192,7 +1193,7 @@ function renderCategoryAvgBars(){
   const max = Math.max(...avgs.map(a => Math.abs(a.avg)), 0.01);
   $('catAvgBars').innerHTML = avgs.map(a => {
     const cls = a.avg >= 0 ? 'pos' : 'neg';
-    const color = CAT_COLORS[a.cat] || '#5B6B80';
+    const color = CAT_COLORS[a.cat] || '#8FB0D2';
     return `
       <div class="bar-row" data-info="${escapeHtml(a.cat)}: Ø ${eur(a.avg)} über ${a.count} Artikel">
         <div class="label"><span>${escapeHtml(a.cat)}</span><span class="${cls}">${eur(a.avg)}</span></div>
@@ -1218,7 +1219,7 @@ function renderCumulativeChart(){
   const canvas = $('cumulativeChart');
   const box = canvas.closest('.chart-box');
   const cssW = Math.max(box.clientWidth - 32, 200);
-  const cssH = 150;
+  const cssH = 170;
   const ctx = sizeCanvas(canvas, cssW, cssH);
   ctx.clearRect(0,0,cssW,cssH);
 
@@ -1226,13 +1227,26 @@ function renderCumulativeChart(){
   const maxV = Math.max(...values, 0);
   const minV = Math.min(...values, 0);
   const range = (maxV - minV) || 1;
-  const padL = 6, padR = 6, padT = 12, padB = 22;
+  const padL = 8, padR = 44, padT = 14, padB = 24;
   const plotW = cssW - padL - padR;
   const plotH = cssH - padT - padB;
   const zeroY = padT + plotH - ((0 - minV) / range) * plotH;
 
-  ctx.strokeStyle = '#243247';
-  ctx.lineWidth = 1;
+  // Y-axis gridlines with € labels (4 lines across the range)
+  ctx.font = '9px JetBrains Mono, monospace';
+  ctx.textAlign = 'left';
+  const gridSteps = 4;
+  for(let i=0;i<=gridSteps;i++){
+    const v = minV + (range * i/gridSteps);
+    const y = padT + plotH - (i/gridSteps)*plotH;
+    ctx.strokeStyle = '#EDEFF3';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(cssW - padR + 4, y); ctx.stroke();
+    ctx.fillStyle = '#8993A1';
+    ctx.fillText(Math.round(v) + '€', cssW - padR + 8, y + 3);
+  }
+  // zero baseline emphasized
+  ctx.strokeStyle = '#D5D9E0'; ctx.lineWidth = 1.2;
   ctx.beginPath(); ctx.moveTo(padL, zeroY); ctx.lineTo(cssW - padR, zeroY); ctx.stroke();
 
   const stepX = raw.length > 1 ? plotW / (raw.length - 1) : 0;
@@ -1243,36 +1257,51 @@ function renderCumulativeChart(){
   });
   cumulativePts = pts;
 
+  // smooth curve helper (quadratic midpoint smoothing)
+  function drawSmoothPath(ctx, pts){
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for(let i=0;i<pts.length-1;i++){
+      const cur = pts[i], next = pts[i+1];
+      const midX = (cur.x+next.x)/2, midY = (cur.y+next.y)/2;
+      ctx.quadraticCurveTo(cur.x, cur.y, midX, midY);
+    }
+    const lastPt = pts[pts.length-1];
+    ctx.lineTo(lastPt.x, lastPt.y);
+  }
+
   if(pts.length > 1){
     ctx.beginPath();
     ctx.moveTo(pts[0].x, zeroY);
-    pts.forEach(p => ctx.lineTo(p.x, p.y));
+    drawSmoothPath(ctx, pts);
     ctx.lineTo(pts[pts.length-1].x, zeroY);
     ctx.closePath();
     const grad = ctx.createLinearGradient(0,padT,0,padT+plotH);
-    const endColor = values[values.length-1] >= 0 ? '79,174,130' : '225,102,122';
-    grad.addColorStop(0, `rgba(${endColor},0.30)`);
-    grad.addColorStop(1, `rgba(${endColor},0.02)`);
+    const endColor = values[values.length-1] >= 0 ? '31,122,77' : '199,65,90';
+    grad.addColorStop(0, `rgba(${endColor},0.16)`);
+    grad.addColorStop(1, `rgba(${endColor},0.01)`);
     ctx.fillStyle = grad;
     ctx.fill();
   }
   ctx.beginPath();
-  pts.forEach((p,i) => i===0 ? ctx.moveTo(p.x,p.y) : ctx.lineTo(p.x,p.y));
-  ctx.strokeStyle = '#D9B36C';
+  if(pts.length > 1) drawSmoothPath(ctx, pts); else if(pts.length===1){ ctx.moveTo(pts[0].x,pts[0].y); ctx.lineTo(pts[0].x,pts[0].y); }
+  ctx.strokeStyle = '#132A45';
   ctx.lineWidth = 2.2;
   ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
   ctx.stroke();
 
   ctx.font = '10px Inter, sans-serif';
-  ctx.fillStyle = '#8AA0BC';
+  ctx.fillStyle = '#647080';
   if(pts.length){
     ctx.textAlign = 'left'; ctx.fillText(formatDate(pts[0].date), pts[0].x, cssH - 6);
-    ctx.textAlign = 'right'; ctx.fillText(formatDate(pts[pts.length-1].date), pts[pts.length-1].x, cssH - 6);
+    ctx.textAlign = 'right'; ctx.fillText(formatDate(pts[pts.length-1].date), Math.min(pts[pts.length-1].x, cssW-padR), cssH - 6);
   }
   const last = pts[pts.length-1];
   if(last){
-    ctx.beginPath(); ctx.arc(last.x, last.y, 3.5, 0, Math.PI*2);
-    ctx.fillStyle = last.v >= 0 ? '#4FAE82' : '#E1667A'; ctx.fill();
+    ctx.beginPath(); ctx.arc(last.x, last.y, 4, 0, Math.PI*2);
+    ctx.fillStyle = last.v >= 0 ? '#1F7A4D' : '#C7415A'; ctx.fill();
+    ctx.beginPath(); ctx.arc(last.x, last.y, 4, 0, Math.PI*2);
+    ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.5; ctx.stroke();
   }
 }
 $('cumulativeChart').addEventListener('click', (ev) => {
@@ -1310,16 +1339,29 @@ function renderMonthlyBarChart(){
   ctx.clearRect(0,0,cssW,cssH);
 
   const maxV = Math.max(...shown.map(m => Math.max(byMonth[m].sale, byMonth[m].purchase)), 0.01);
-  const padL = 6, padR = 6, padT = 10, padB = 24;
+  const padL = 6, padR = 6, padT = 24, padB = 24;
   const plotW = cssW - padL - padR;
   const plotH = cssH - padT - padB;
   const groupW = plotW / shown.length;
   const barW = Math.min(groupW * 0.32, 24);
 
-  ctx.strokeStyle = '#243247'; ctx.lineWidth = 1;
+  ctx.strokeStyle = '#D5D9E0'; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(padL, padT + plotH); ctx.lineTo(cssW - padR, padT + plotH); ctx.stroke();
 
-  ctx.font = '10px Inter, sans-serif'; ctx.textAlign = 'center';
+  function roundTopRect(x,y,w,h,r){
+    if(h < r) r = h;
+    ctx.beginPath();
+    ctx.moveTo(x, y+h);
+    ctx.lineTo(x, y+r);
+    ctx.arcTo(x, y, x+r, y, r);
+    ctx.lineTo(x+w-r, y);
+    ctx.arcTo(x+w, y, x+w, y+r, r);
+    ctx.lineTo(x+w, y+h);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  ctx.textAlign = 'center';
   monthlyBars = [];
   shown.forEach((m,i) => {
     const cx = padL + groupW * i + groupW/2;
@@ -1327,9 +1369,16 @@ function renderMonthlyBarChart(){
     const purchaseH = (byMonth[m].purchase / maxV) * plotH;
     const saleX = cx - barW - 2, purchaseX = cx + 2;
     const saleY = padT + plotH - saleH, purchaseY = padT + plotH - purchaseH;
-    ctx.fillStyle = '#4FAE82'; ctx.fillRect(saleX, saleY, barW, saleH);
-    ctx.fillStyle = '#E1667A'; ctx.fillRect(purchaseX, purchaseY, barW, purchaseH);
-    ctx.fillStyle = '#8AA0BC';
+    ctx.fillStyle = '#1F7A4D'; roundTopRect(saleX, saleY, barW, saleH, 3);
+    ctx.fillStyle = '#C7415A'; roundTopRect(purchaseX, purchaseY, barW, purchaseH, 3);
+
+    ctx.font = '9px JetBrains Mono, monospace';
+    ctx.fillStyle = '#12181F';
+    if(saleH > 14) ctx.fillText(Math.round(byMonth[m].sale), saleX+barW/2, saleY-5);
+    if(purchaseH > 14) ctx.fillText(Math.round(byMonth[m].purchase), purchaseX+barW/2, purchaseY-5);
+
+    ctx.font = '10px Inter, sans-serif';
+    ctx.fillStyle = '#647080';
     const [y,mo] = m.split('-');
     ctx.fillText(mo + '/' + y.slice(2), cx, cssH - 8);
     monthlyBars.push({x:saleX, y:saleY, w:barW, h:saleH, label:'Verkauf', month:m, value:byMonth[m].sale});
@@ -1375,7 +1424,7 @@ function renderSalesCountChart(){
   const groupW = plotW / shown.length;
   const barW = Math.min(groupW * 0.5, 34);
 
-  ctx.strokeStyle = '#243247'; ctx.lineWidth = 1;
+  ctx.strokeStyle = '#D5D9E0'; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(padL, padT + plotH); ctx.lineTo(cssW - padR, padT + plotH); ctx.stroke();
   ctx.font = '10px Inter, sans-serif'; ctx.textAlign = 'center';
   salesCountBars = [];
@@ -1383,9 +1432,9 @@ function renderSalesCountChart(){
     const cx = padL + groupW * i + groupW/2;
     const h = (byMonth[m] / maxV) * plotH;
     const x = cx - barW/2, y = padT + plotH - h;
-    ctx.fillStyle = '#6C8CBF'; ctx.fillRect(x, y, barW, h);
-    ctx.fillStyle = '#EEF2F7'; ctx.fillText(String(byMonth[m]), cx, Math.max(y - 4, 10));
-    ctx.fillStyle = '#8AA0BC';
+    ctx.fillStyle = '#35577F'; ctx.fillRect(x, y, barW, h);
+    ctx.fillStyle = '#12181F'; ctx.fillText(String(byMonth[m]), cx, Math.max(y - 4, 10));
+    ctx.fillStyle = '#647080';
     const [yr,mo] = m.split('-');
     ctx.fillText(mo + '/' + yr.slice(2), cx, cssH - 8);
     salesCountBars.push({x, y, w:barW, h, month:m, value:byMonth[m]});
@@ -1432,7 +1481,7 @@ function renderWeekdayChart(){
   const groupW = plotW / 7;
   const barW = Math.min(groupW * 0.55, 30);
 
-  ctx.strokeStyle = '#243247'; ctx.lineWidth = 1;
+  ctx.strokeStyle = '#D5D9E0'; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(padL, zeroY); ctx.lineTo(cssW - padR, zeroY); ctx.stroke();
   ctx.font = '10px Inter, sans-serif'; ctx.textAlign = 'center';
   weekdayBars = [];
@@ -1442,9 +1491,9 @@ function renderWeekdayChart(){
     const h = Math.abs(v)/range * plotH;
     const x = cx - barW/2;
     const y = v >= 0 ? zeroY - h : zeroY;
-    ctx.fillStyle = v >= 0 ? '#4FAE82' : '#E1667A';
+    ctx.fillStyle = v >= 0 ? '#1F7A4D' : '#C7415A';
     ctx.fillRect(x, y, barW, Math.max(h,1));
-    ctx.fillStyle = '#8AA0BC';
+    ctx.fillStyle = '#647080';
     ctx.fillText(WEEKDAYS[d], cx, cssH - 6);
     weekdayBars.push({x, y, w:barW, h:Math.max(h,4), day:d, value:v, count: byDay[d]?byDay[d].count:0});
   });
@@ -1469,7 +1518,7 @@ function renderOldestStock(){
   $('oldestStockBars').innerHTML = withAge.map(e => `
     <div class="bar-row">
       <div class="label"><span>${escapeHtml(e.name)}</span><span>${e.days} Tage</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:${Math.max(e.days/max*100,4)}%;background:${e.days>60?'#E1667A':'#D9B36C'}"></div></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.max(e.days/max*100,4)}%;background:${e.days>60?'#C7415A':'#132A45'}"></div></div>
     </div>
   `).join('');
 }
@@ -1496,7 +1545,7 @@ function renderDonutChart(){
     const frac = byCat[c] / total;
     const end = start + frac * Math.PI * 2;
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,rOuter,start,end); ctx.closePath();
-    ctx.fillStyle = CAT_COLORS[c] || '#5B6B80'; ctx.fill();
+    ctx.fillStyle = CAT_COLORS[c] || '#8FB0D2'; ctx.fill();
     donutSegments.push({cat:c, start, end, value:byCat[c], pct: frac*100});
     start = end;
   });
@@ -1504,10 +1553,24 @@ function renderDonutChart(){
   ctx.beginPath(); ctx.arc(cx,cy,rInner,0,Math.PI*2); ctx.fill();
   ctx.globalCompositeOperation = 'source-over';
 
+  // fill the hole with the card surface color, then add a center total label
+  ctx.fillStyle = '#F6F7F9';
+  ctx.beginPath(); ctx.arc(cx,cy,rInner,0,Math.PI*2); ctx.fill();
+  ctx.font = '700 12px JetBrains Mono, monospace';
+  ctx.fillStyle = '#12181F';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const totalLabel = total >= 1000 ? Math.round(total/1000) + 'k€' : Math.round(total) + '€';
+  ctx.fillText(totalLabel, cx, cy - 4);
+  ctx.font = '8px Inter, sans-serif';
+  ctx.fillStyle = '#8993A1';
+  ctx.fillText('Umsatz', cx, cy + 10);
+  ctx.textBaseline = 'alphabetic';
+
   $('donutLegend').innerHTML = cats.sort((a,b)=>byCat[b]-byCat[a]).map(c => {
     const pct = (byCat[c]/total*100).toFixed(0);
     return `<div class="legend-row" data-cat="${escapeHtml(c)}">
-      <span class="lbl"><span class="swatch" style="background:${CAT_COLORS[c]||'#5B6B80'}"></span>${escapeHtml(c)}</span>
+      <span class="lbl"><span class="swatch" style="background:${CAT_COLORS[c]||'#8FB0D2'}"></span>${escapeHtml(c)}</span>
       <span>${pct}%</span>
     </div>`;
   }).join('');
