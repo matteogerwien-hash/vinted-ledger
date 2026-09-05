@@ -284,15 +284,15 @@
   <!-- HOME / ÜBERSICHT -->
   <section class="view active" id="view-home">
     <div class="hero-card">
-      <div class="hero-card-label">Gesamtgewinn</div>
+      <div class="hero-card-label">Gewinn diesen Monat</div>
       <div class="hero-card-num" id="homeHeroProfit">0,00 €</div>
-      <div class="hero-card-sub" id="homeHeroSub">0 verkaufte Artikel</div>
+      <div class="hero-card-sub" id="homeHeroSub">0 verkaufte Artikel diesen Monat</div>
+      <div class="stat-tile-trend" id="homeMonthTrend" style="display:none;margin-top:8px;font-size:0.78rem;"></div>
     </div>
     <div class="stat-grid">
       <div class="stat-tile">
-        <div class="stat-tile-label">Diesen Monat</div>
-        <div class="stat-tile-val" id="homeMonthProfit">0,00 €</div>
-        <div class="stat-tile-trend" id="homeMonthTrend" style="display:none;"></div>
+        <div class="stat-tile-label">Gesamtgewinn</div>
+        <div class="stat-tile-val" id="homeTotalProfit">0,00 €</div>
       </div>
       <div class="stat-tile">
         <div class="stat-tile-label">Im Bestand</div>
@@ -792,16 +792,16 @@ function renderHome(){
   const now = new Date();
   const prevMonthDate = new Date(now.getFullYear(), now.getMonth()-1, 1);
   const prevMonthKey = prevMonthDate.toISOString().slice(0,7);
-  const monthProfit = sold.filter(e => (e.soldDate||'').slice(0,7)===monthKey).reduce((s,e)=>s+e.profit,0);
+  const monthSold = sold.filter(e => (e.soldDate||'').slice(0,7)===monthKey);
+  const monthProfit = monthSold.reduce((s,e)=>s+e.profit,0);
   const prevMonthProfit = sold.filter(e => (e.soldDate||'').slice(0,7)===prevMonthKey).reduce((s,e)=>s+e.profit,0);
   const bestandCapital = bestandItems.reduce((s,e)=>s+e.purchase,0);
   const notListed = bestandItems.filter(e => !e.listed).length;
 
   const heroEl = $('homeHeroProfit');
-  heroEl.textContent = (totalProfit>=0?'':'−') + eur(Math.abs(totalProfit));
-  heroEl.className = 'hero-card-num ' + (totalProfit>=0?'pos':'neg');
-  $('homeHeroSub').textContent = sold.length + (sold.length===1?' verkaufter Artikel':' verkaufte Artikel');
-  $('homeMonthProfit').textContent = (monthProfit>=0?'':'−') + eur(Math.abs(monthProfit));
+  heroEl.textContent = (monthProfit>=0?'':'−') + eur(Math.abs(monthProfit));
+  heroEl.className = 'hero-card-num ' + (monthProfit>=0?'pos':'neg');
+  $('homeHeroSub').textContent = monthSold.length + (monthSold.length===1?' verkaufter Artikel diesen Monat':' verkaufte Artikel diesen Monat');
 
   const trendEl = $('homeMonthTrend');
   if(prevMonthProfit !== 0){
@@ -813,6 +813,9 @@ function renderHome(){
   }else{
     trendEl.style.display = 'none';
   }
+
+  const totalEl = $('homeTotalProfit');
+  totalEl.textContent = (totalProfit>=0?'':'−') + eur(Math.abs(totalProfit));
 
   $('homeBestandCount').textContent = bestandItems.length + ' Artikel';
   $('homeBestandCapital').textContent = eur(bestandCapital);
