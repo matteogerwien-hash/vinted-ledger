@@ -307,6 +307,32 @@
         <div class="stat-tile-val warn" id="homeNotListed">0</div>
       </div>
     </div>
+    <div class="card" id="homeGoalCard" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
+        <span style="font-size:0.72rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.08em;">Monatsziel</span>
+        <span style="font-size:0.78rem;font-weight:700;" id="homeGoalPct">0%</span>
+      </div>
+      <div class="goal-progress-track"><div class="goal-progress-fill" id="homeGoalFill" style="width:0%;"></div></div>
+    </div>
+
+    <div class="card" id="homeBackupCard">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+        <div>
+          <div style="font-weight:700;font-size:0.88rem;margin-bottom:2px;">Backup nicht vergessen</div>
+          <div style="font-size:0.74rem;color:var(--text-faint);" id="homeBackupSub">Deine Daten liegen nur auf diesem Gerät.</div>
+        </div>
+        <button class="btn small" id="homeBackupBtn" style="margin:0;flex-shrink:0;">Sichern</button>
+      </div>
+    </div>
+
+    <div class="panel" id="homeRecentPanel" style="display:none;">
+      <h3 style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span>Letzte Verkäufe</span>
+        <button data-goto="list" style="background:none;border:none;color:var(--navy);font-size:0.72rem;font-weight:700;cursor:pointer;text-transform:none;letter-spacing:0;">Alle ansehen</button>
+      </h3>
+      <div class="card" id="homeRecentCard" style="padding:4px 20px;"></div>
+    </div>
+
     <div class="quick-actions">
       <button class="quick-btn" data-goto="add">+ Neuer Artikel</button>
       <button class="quick-btn ghost" data-goto="bestand">Bestand ansehen</button>
@@ -820,6 +846,46 @@ function renderHome(){
   $('homeBestandCount').textContent = bestandItems.length + ' Artikel';
   $('homeBestandCapital').textContent = eur(bestandCapital);
   $('homeNotListed').textContent = notListed;
+
+  // Mini goal progress
+  const goalCard = $('homeGoalCard');
+  if(goal.monthly && goal.monthly > 0){
+    goalCard.style.display = 'block';
+    const pct = Math.max(0, Math.min((monthProfit/goal.monthly)*100, 100));
+    $('homeGoalFill').style.width = pct + '%';
+    $('homeGoalFill').classList.toggle('reached', monthProfit >= goal.monthly);
+    $('homeGoalPct').textContent = Math.round((monthProfit/goal.monthly)*100) + '%';
+  }else{
+    goalCard.style.display = 'none';
+  }
+
+  // Backup reminder
+  if(lastBackupAt){
+    const days = Math.floor((Date.now() - new Date(lastBackupAt).getTime()) / 86400000);
+    $('homeBackupSub').textContent = days === 0 ? 'Heute gesichert ✓' : `Zuletzt gesichert vor ${days} ${days===1?'Tag':'Tagen'}`;
+  }else{
+    $('homeBackupSub').textContent = 'Noch nie gesichert – deine Daten liegen nur auf diesem Gerät.';
+  }
+
+  // Recent sales
+  const recentPanel = $('homeRecentPanel');
+  const recentSold = [...sold].sort((a,b)=>(b.soldDate||'').localeCompare(a.soldDate||'')).slice(0,3);
+  if(recentSold.length === 0){
+    recentPanel.style.display = 'none';
+  }else{
+    recentPanel.style.display = 'block';
+    $('homeRecentCard').innerHTML = recentSold.map(e => {
+      const cls = e.profit >= 0 ? 'pos' : 'neg';
+      const sign = e.profit >= 0 ? '+' : '';
+      return `
+        <div class="entry" style="border-left:3px solid ${CAT_COLORS[e.category]||'#A3C0DA'};padding-left:12px;">
+          <div class="name">${escapeHtml(e.name)}</div>
+          <div class="profit ${cls}">${sign}${eur(e.profit)}</div>
+          <div class="date">${formatDate(e.soldDate)}</div>
+        </div>
+      `;
+    }).join('');
+  }
 }
 
 // --- Bestand view ---
@@ -1642,14 +1708,22 @@ $('exportBtn').addEventListener('click', () => {
   document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 });
 
-$('exportBackupBtn').addEventListener('click', () => {
+const LAST_BACKUP_KEY = 'vinted-last-backup';
+let lastBackupAt = null;
+
+async function triggerBackupExport(){
   const payload = { entries, goal, exportedAt: new Date().toISOString() };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href = url; a.download = 'vinted-ledger-backup.json';
   document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
   showToast('Backup heruntergeladen ✓', 'ok');
-});
+  lastBackupAt = new Date().toISOString();
+  try{ await storage.set(LAST_BACKUP_KEY, lastBackupAt); }catch(e){}
+  renderHome();
+}
+$('exportBackupBtn').addEventListener('click', triggerBackupExport);
+$('homeBackupBtn').addEventListener('click', triggerBackupExport);
 $('importBackupBtn').addEventListener('click', () => $('importFileInput').click());
 $('importFileInput').addEventListener('change', async (ev) => {
   const file = ev.target.files[0];
@@ -1678,6 +1752,7 @@ $('importFileInput').addEventListener('change', async (ev) => {
   await checkTip();
   await loadEntries();
   await loadGoal();
+  try{ const res = await storage.get(LAST_BACKUP_KEY); lastBackupAt = res ? res.value : null; }catch(e){ lastBackupAt = null; }
   renderHome();
   renderBestand();
   renderList();
